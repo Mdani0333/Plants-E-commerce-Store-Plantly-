@@ -1,0 +1,87 @@
+.flex-container{
+    display: flex;
+    flex-direction: column;
+    padding: 20px 40px 40px 40px;
+}
+.flex-item1{
+    position: relative;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    padding: 0 30px 20px 30px;
+    border-bottom: 1px solid #ebecf0;
+}
+.description{
+    width: 50%;
+    display: flex;
+    flex-direction: column;
+    padding: 20px;
+}
+.viewImg{
+    object-fit: contain;
+}  
+
+.flex-item2{
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+.facts-heading{
+    text-align: center;
+    margin: 30px;
+}
+
+.facts-div1{
+    position: relative;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    border: 1px solid #ebecf0;
+    width: 350px;
+    height: auto;
+}
+.facts-div2{
+    width: 70%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-start;
+}
+
+.water-icon,
+.temp-icon,
+.light-icon,
+.humidity-icon,
+.height-icon,
+.heart-icon,
+.alarm-icon{
+    font-size: 3.5rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-right: 10px;
+}
+.water-icon{
+    color: #1ca3ec;
+}
+.temp-icon{
+    color: rgba(211, 33, 45);
+}
+.light-icon{
+    color: #ffd700;
+}
+.humidity-icon{
+    color: #23395d;
+}
+.height-icon{
+    color: #98633b;
+}
+.heart-icon{
+    color: #00ba69;
+}
+.alarm-icon{
+    color: #e20000;
+}
