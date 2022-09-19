@@ -1,12 +1,15 @@
-import React from "react";
+import React, { useContext } from "react";
 import "./navbar.css";
 import { BiShoppingBag } from "react-icons/bi";
 import { BiHeart } from "react-icons/bi";
 import { BiUser } from "react-icons/bi";
 import { ImLeaf } from "react-icons/im";
 import { Link } from "react-router-dom";
+import { UserContext } from "../context-hooks/UserContext";
 
-export function Navbar({ token }) {
+export default function Navbar({ token, adminToken }) {
+  const user = useContext(UserContext);
+
   function hm_nav() {
     var hm_nav = document.getElementById("hm-nav");
     hm_nav.classList.toggle("hm-nav");
@@ -48,10 +51,12 @@ export function Navbar({ token }) {
             <BiUser className="icons" />
           </Link>
           {token ? (
-            <span className="greenSpan">You are Logged In</span>
+            <span className="greenSpan">{user.name}</span>
+          ) : adminToken ? (
+            <span className="greenSpan">Admin Mode On</span>
           ) : (
             <span className="redSpan">
-              You are not Logged In. Login <Link to="/login">here</Link>
+              Login <Link to="/login">here</Link>
             </span>
           )}
         </div>

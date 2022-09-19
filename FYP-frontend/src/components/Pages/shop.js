@@ -1,18 +1,19 @@
 import "./shop.css";
-import React from "react";
+import React, { useContext } from "react";
 import { BiHeart } from "react-icons/bi";
 import { BiShoppingBag } from "react-icons/bi";
-import { useContext } from "react";
 import { ProductsContext } from "../../context-hooks/ProductsContext";
 import { Link } from "react-router-dom";
+import { UserContext } from "../../context-hooks/UserContext";
 
 export function Product({ addToCart, addToFav }) {
   const products = useContext(ProductsContext);
+  const user = useContext(UserContext);
   return (
     <div className="product-box">
       {products.map((item) => (
-        <div className="product-card" key={item.id}>
-          <Link to={`/product${item.id}`} className="product-link">
+        <div className="product-card" key={item._id}>
+          <Link to={`/product${item._id}`} className="product-link">
             <img src={item.image} alt="" className="product-img" />
             <div className="product-text-padding">
               <p>-{item.specie}</p>
@@ -27,20 +28,30 @@ export function Product({ addToCart, addToFav }) {
                   <span className="redSpan">OutOfStock</span>
                 )}
               </label>
-              <Link to="/my/favourites">
+              <Link
+                to={
+                  Object.keys(user).length === 0
+                    ? "/NotSignedIn"
+                    : "/my/favourites"
+                }
+              >
                 <button
                   className="product-btn"
-                  onClick={() => addToFav(item.id, item)}
+                  onClick={() => addToFav(item._id, item)}
                 >
                   Add to Favourites
                   <BiHeart />
                 </button>
               </Link>
               {item.instock ? (
-                <Link to="/my/cart">
+                <Link
+                  to={
+                    Object.keys(user).length === 0 ? "/NotSignedIn" : "/my/cart"
+                  }
+                >
                   <button
                     className="product-btn"
-                    onClick={() => addToCart(item.id, item)}
+                    onClick={() => addToCart(item._id, item)}
                   >
                     Add to Cart
                     <BiShoppingBag />

@@ -1,0 +1,21 @@
+1--//pages(*_*)
+landing page
+footer
+see gardeners profiles and contact them.
+user account page.
+categories pages.
+
+2--//adding&removing from cart and favourites(*_*)
+
+3--//search module
+search filters
+
+4--//payment module
+details page-->payment method(pay on delivery)(pay throught card{stripe})-->Summary with confirmation button-->Order is placed page-->Send email.
+
+5--//Exhibition module.--->???<---
+6--//making full website responsive.--->???<---
+
+7--//Gradener hiring Module(*_*)
+Gradener login/signUp-->profile completion-->Upload info-->change status and remove info(CV)-->Gardener mode will be On.
+

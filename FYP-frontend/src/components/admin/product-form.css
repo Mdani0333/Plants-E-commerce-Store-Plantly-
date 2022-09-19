@@ -1,0 +1,18 @@
+.form-control {
+  resize: none;
+}
+
+.form-control ::-webkit-outer-spin-button,
+::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+.form-group {
+  width: 380px;
+  height: 70px;
+}
+
+.checkbox-label{
+  margin-right: 50px;
+}

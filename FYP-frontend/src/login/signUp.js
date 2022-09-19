@@ -9,6 +9,10 @@ export function SignUp() {
     name: "",
     email: "",
     password: "",
+    paymentDetails: {},
+    cart: [],
+    favourites: [],
+    shoppingHistory: [],
   });
   const [error, setError] = useState();
 

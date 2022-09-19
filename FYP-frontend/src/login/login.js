@@ -3,7 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 import "./form.css";
 import axios from "axios";
 
-export function Login({ giveToken }) {
+export function Login({ giveToken, giveUser }) {
   //States
   const [data, setData] = useState({
     name: "",
@@ -28,6 +28,7 @@ export function Login({ giveToken }) {
       console.log(res.message);
       navigate("/");
       giveToken(res.data);
+      giveUser(res.user);
     } catch (error) {
       if (
         (error.response && error.response.status >= 400) ||

@@ -16,10 +16,11 @@ import { RiAlarmWarningLine } from "react-icons/ri";
 export function View({ addToCart, addToFav }) {
   const { id } = useParams();
   const products = useContext(ProductsContext);
+  console.log(id);
 
-  const view = products.find((x) => x.id == id);
+  const view = products.find((x) => x._id == id);
   return (
-    <section className="flex-container" key={view.id}>
+    <section className="flex-container" key={view._id}>
       <div className="flex-item1">
         <div className="description">
           <p>--{view.specie}</p>
@@ -39,7 +40,7 @@ export function View({ addToCart, addToFav }) {
             <Link to="/my/cart">
               <button
                 className="product-btn"
-                onClick={() => addToCart(view.id, view)}
+                onClick={() => addToCart(view._id, view)}
               >
                 Add to Cart
                 <BiShoppingBag />
@@ -51,7 +52,7 @@ export function View({ addToCart, addToFav }) {
           <Link to="/my/favourites">
             <button
               className="product-btn"
-              onClick={() => addToFav(view.id, view)}
+              onClick={() => addToFav(view._id, view)}
             >
               Add to Favourites
               <BiHeart />

@@ -1,0 +1,27 @@
+POST http://localhost:8080/products/post
+content-type: application/json
+
+{
+        "id":1,
+        "name":"Pink Dragon",
+        "category":"indoorPlant",
+        "specie":"Alocasia Baginda",
+        "instock":2,
+        "price":24.99,
+        "description":"Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse gravida interdum tincidunt. Donec urna justo, porttitor vitae ultricies non, ornare quis arcu. Orci varius natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Curabitur interdum aliquet arcu nec bibendum. Aenean sed tellus vel leo accumsan tempor. In fringilla elit ac quam laoreet, sed bibendum lacus imperdiet. Quisque non sagittis augue",
+        "temprature":"18-28",
+        "humidity":82,
+        "water":250,
+        "light":"Does not need direct light but give plenty of indirect light",
+        "height":"38-48",
+        "benefits":{
+            "airFreshner":true,
+            "otherBenefits":"Reduces dust in air and increases humidity level."
+        },
+        "cautions":{
+            "animalFriendly":false,
+            "poisonous":true,
+            "deathOnConsumption":true
+        },
+        "image":"https://www.dropbox.com/s/wpcb2trcx19ngca/IMG_20220721_104821-removebg-preview.png?raw=1"
+    }
