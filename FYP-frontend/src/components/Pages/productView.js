@@ -1,10 +1,11 @@
 import "./productView.css";
-import React from "react";
+import React, { useState } from "react";
 import { useParams } from "react-router-dom";
 import { useContext } from "react";
 import { ProductsContext } from "../../context-hooks/ProductsContext";
+import { UserContext } from "../../context-hooks/UserContext";
 import { BiShoppingBag } from "react-icons/bi";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { MdOutlineWaterDrop } from "react-icons/md";
 import { FaTemperatureHigh } from "react-icons/fa";
 import { MdOutlineLightMode } from "react-icons/md";
@@ -12,11 +13,46 @@ import { WiHumidity } from "react-icons/wi";
 import { RiLineHeight } from "react-icons/ri";
 import { BiHeart } from "react-icons/bi";
 import { RiAlarmWarningLine } from "react-icons/ri";
+import axios from "axios";
 
-export function View({ addToCart, addToFav }) {
+export function View({ refreshUser }) {
   const { id } = useParams();
   const products = useContext(ProductsContext);
-  console.log(id);
+
+  const user = useContext(UserContext);
+
+  const [cart, setCart] = useState([]);
+
+  const navigate = useNavigate();
+  const addToCart = async (id, item) => {
+    if (user.cart.some((x) => x._id === id)) {
+      alert("This product is already in cart");
+    } else {
+      setCart(user.cart);
+      cart.push(item);
+      const url = `http://localhost:8080/user/cart/${user._id}`;
+      const { data: res } = await axios.patch(url, cart);
+      console.log(res.message);
+      refreshUser();
+      navigate("/my/cart");
+    }
+  };
+
+  const [fav, setFav] = useState([]);
+
+  const addToFav = async (id, item) => {
+    if (user.favourites.some((x) => x._id === id)) {
+      alert("This product is already in Favourites");
+    } else {
+      setFav(user.favourites);
+      fav.push(item);
+      const url = `http://localhost:8080/user/fav/${user._id}`;
+      const { data: res } = await axios.patch(url, fav);
+      console.log(res.message);
+      refreshUser();
+      navigate("/my/favourites");
+    }
+  };
 
   const view = products.find((x) => x._id == id);
   return (
@@ -37,27 +73,23 @@ export function View({ addToCart, addToFav }) {
             )}
           </label>
           {view.instock ? (
-            <Link to="/my/cart">
-              <button
-                className="product-btn"
-                onClick={() => addToCart(view._id, view)}
-              >
-                Add to Cart
-                <BiShoppingBag />
-              </button>
-            </Link>
+            <button
+              className="product-btn"
+              onClick={() => addToCart(view._id, view)}
+            >
+              Add to Cart
+              <BiShoppingBag />
+            </button>
           ) : (
             "block"
           )}
-          <Link to="/my/favourites">
-            <button
-              className="product-btn"
-              onClick={() => addToFav(view._id, view)}
-            >
-              Add to Favourites
-              <BiHeart />
-            </button>
-          </Link>
+          <button
+            className="product-btn"
+            onClick={() => addToFav(view._id, view)}
+          >
+            Add to Favourites
+            <BiHeart />
+          </button>
         </div>
         <img src={view.image} alt="" className="viewImg" />
       </div>

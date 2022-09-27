@@ -1,0 +1,119 @@
+.profile-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  scroll-behavior: smooth;
+}
+
+.profile-div {
+  width: 900px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  border: 1px solid #b0b0b0;
+  border-radius: 12px;
+  margin: 3rem 0;
+  padding: 0 15px 20px 0;
+}
+
+.p-img {
+  width: 200px;
+  height: 200px;
+  object-fit: contain;
+  border-radius: 50%;
+}
+
+.p-icons {
+  margin-right: 5px;
+}
+
+.status-row {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  padding-right: 20px;
+  width: 100%;
+}
+
+.row-flex {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: flex-start;
+  padding-left: 2.7rem;
+  margin-bottom: 2rem;
+  width: 100%;
+}
+
+.col-flex {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+  padding-left: 15px;
+  width: 100%;
+}
+
+.resume {
+  position: relative;
+  border: 1px solid black;
+  width: 800px;
+  padding: 10px;
+  margin-left: 2.7rem;
+}
+.edit-delete-option {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+}
+.resume-h {
+  margin-left: 2.7rem;
+  font-style: italic;
+}
+
+.points {
+  font-weight: 600;
+}
+
+.change-status {
+  width: 100%;
+}
+
+.form-row {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  align-items: center;
+  width: 100%;
+  margin-left: 46px;
+  padding: 30px 0;
+}
+
+.s-input {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  width: 150px;
+  margin-right: 30px;
+}
+
+.change-username-password {
+  width: 100%;
+  padding-left: 45px;
+}
+
+.logout{
+    width: 100%;
+    padding-left: 45px;
+    margin-top: 30px;
+}
+
+.download-icon{
+  font-size: 1.4rem;
+  margin-right: 10px;
+}
+.download-icon:hover{
+  color: blue;
+}

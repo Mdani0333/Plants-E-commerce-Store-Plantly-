@@ -1,0 +1,38 @@
+.profile-card {
+  border: 2px solid #ebecf0;
+  border-radius: 6px;
+  background-color: #00ba69;
+  width: 450px;
+}
+
+.profile-info {
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  justify-content: flex-start;
+  padding-left: 1.5rem;
+  margin-top: 1rem;
+  width: 100%;
+  background-color: #fff;
+}
+
+.hire-img {
+  width: 140px;
+  height: 140px;
+  object-fit: contain;
+  border-radius: 50%;
+}
+
+.status-name-row {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  padding-right: 20px;
+  width: 280px;
+}
+
+.visit-profile-btn{
+    background-color: #fff;
+    padding-top: 1.2rem;
+}

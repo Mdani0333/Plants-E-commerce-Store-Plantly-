@@ -1,18 +1,15 @@
 import React, { useState } from "react";
-import "./form.css";
+import "../../login/form.css";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 
-export function SignUp() {
+export function GardenerSignUp() {
   //States
   const [data, setData] = useState({
     name: "",
     email: "",
     password: "",
-    paymentDetails: [],
-    cart: [],
-    favourites: [],
-    shoppingHistory: [],
+    resume: [],
   });
   const [error, setError] = useState();
 
@@ -26,10 +23,10 @@ export function SignUp() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const url = "http://localhost:8080/user";
+      const url = "http://localhost:8080/gardener";
       const { data: res } = await axios.post(url, data);
       console.log(res.message);
-      navigate("/login");
+      navigate("/gardener-login");
     } catch (error) {
       if (
         (error.response && error.response.status >= 400) ||
@@ -43,7 +40,7 @@ export function SignUp() {
   return (
     <div>
       <form className="form-container" onSubmit={handleSubmit}>
-        <h3>SignUp</h3>
+        <h3>Gardener--SignUp</h3>
         <br />
         <div class="form-group">
           <label for="exampleInputUsername1">Name</label>
@@ -97,7 +94,7 @@ export function SignUp() {
         <br />
 
         <p>
-          Already have an account <Link to="/login">Login</Link>
+          Already have an account <Link to="/gardener-login">Login</Link>
         </p>
         {error && <div className="redSpan">{error}</div>}
       </form>

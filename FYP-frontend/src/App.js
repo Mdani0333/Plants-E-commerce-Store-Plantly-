@@ -23,10 +23,22 @@ import { Addproduct } from "./components/admin/product-form";
 import { AllProducts } from "./components/admin/all-products";
 import { UpdateForm } from "./components/admin/update-form";
 import { AllUsers } from "./components/admin/all-users";
+import { GardenerLogin } from "./components/gardener/gardener-login";
+import { GardenerSignUp } from "./components/gardener/gardener-signUp";
+import { ProfileCompletion } from "./components/gardener/profile-completion";
+import { Profile } from "./components/gardener/profile";
+import { ChangePassword } from "./components/gardener/username-password-form";
+import { ChangePasswordUser } from "./components/user/username-password-form";
+import { Account } from "./components/user/account";
+import { AllGardeners } from "./components/admin/all-gardeners";
+import { HireGard } from "./components/hire-gardener/hire-gardeners";
+import { VisitProfile } from "./components/hire-gardener/visit-profile";
+import { LandingPage } from "./components/landing-page";
+import Footer from "./components/footer";
 
 function App() {
-  const [loading, setLoading] = useState(false);
-  const [page, setPage] = useState(true);
+  const [loading, setLoading] = useState(true);
+  const [page, setPage] = useState(false);
 
   //products
   const [products, setProducts] = useState([]);
@@ -34,18 +46,43 @@ function App() {
   //user
   const [token, setToken] = useState("");
   const [user, setUser] = useState({});
-
-  //admin
-  const [admin, setAdmin] = useState({});
-  const [adminToken, setAdminToken] = useState("");
-
   function giveToken(data) {
     setToken(data);
   }
   function giveUser(data) {
     setUser(data);
-    // console.log(user);
   }
+  //refreshing single user
+  function refreshUser() {
+    axios
+      .get(`http://localhost:8080/user/get/${user._id}`)
+      .then(function (res) {
+        setUser(res.data);
+      });
+  }
+
+  //gardener
+  const [gardToken, setGardToken] = useState("");
+  const [gardener, setGardener] = useState({});
+  function giveGardToken(data) {
+    setGardToken(data);
+  }
+  function giveGard(data) {
+    setGardener(data);
+  }
+  //refreshing single gardener
+  function refreshGardener() {
+    axios
+      .get(`http://localhost:8080/gardener/get/${gardener._id}`)
+      .then(function (res) {
+        setGardener(res.data);
+        console.log(res.data);
+      });
+  }
+
+  //admin
+  const [admin, setAdmin] = useState({});
+  const [adminToken, setAdminToken] = useState("");
   function giveAdminToken(data) {
     setAdminToken(data);
   }
@@ -71,38 +108,17 @@ function App() {
   //getting only on start
   useEffect(() => {
     getProducts();
-    console.log(products);
+    setLoading(false);
+    setPage(true);
   }, []);
 
-  function addToCart(id, item) {
-    if (user.cart.some((x) => x._id === id)) {
-      alert("This product is already in cart");
-    } else {
-      alert("work in progress");
-    }
-  }
-
-  function remove(id) {
-    user.cart.splice(
-      user.cart.findIndex((x) => x._id === id),
-      1
-    );
-  }
-
-  function addToFav(id, item) {
-    if (user.favourites.some((x) => x._id === id)) {
-      alert("This product is already in Favourites");
-    } else {
-      alert("work in progress");
-    }
-  }
-
-  function removeFromFav(id) {
-    user.favourites.splice(
-      user.favourites.findIndex((x) => x._id === id),
-      1
-    );
-  }
+  const [categories, setCategories] = useState([
+    "indoorPlant",
+    "mini",
+    "flower",
+    "pot-standee",
+    "agricultural",
+  ]);
 
   return (
     <div className="App-div">
@@ -112,35 +128,118 @@ function App() {
           <ProductsContext.Provider value={products}>
             <UserContext.Provider value={user}>
               <Suspense fallback={<Loading />}>
-                <Navbar token={token} adminToken={adminToken} />
+                <Navbar
+                  token={token}
+                  adminToken={adminToken}
+                  gardToken={gardToken}
+                  gardener={gardener}
+                />
                 <Routes>
+                  <Route exact path="/" element={<LandingPage />} />
                   <Route
                     exact
-                    path="/"
+                    path="/shop"
                     element={
-                      <Product addToCart={addToCart} addToFav={addToFav} />
+                      <Product
+                        refreshUser={refreshUser}
+                        categories={categories}
+                      />
+                    }
+                  />
+                  <Route
+                    exact
+                    path="/hire-gardeners"
+                    element={
+                      <HireGard
+                        token={token}
+                        adminToken={adminToken}
+                        gardToken={gardToken}
+                      />
+                    }
+                  />
+                  <Route
+                    exact
+                    path="/hire-gardener/:id"
+                    element={
+                      <VisitProfile
+                        token={token}
+                        adminToken={adminToken}
+                        gardToken={gardToken}
+                      />
                     }
                   />
                   <Route
                     exact
                     path="/product:id"
-                    element={<View addToCart={addToCart} addToFav={addToFav} />}
+                    element={<View refreshUser={refreshUser} />}
                   />
                   <Route
                     exact
                     path="/my/cart"
-                    element={<CartView remove={remove} />}
+                    element={<CartView refreshUser={refreshUser} />}
                   />
                   <Route
                     exact
                     path="/my/favourites"
-                    element={<Favourites removeFromFav={removeFromFav} />}
+                    element={<Favourites refreshUser={refreshUser} />}
                   />
                   <Route
                     exact
                     path="/login"
                     element={
                       <Login giveToken={giveToken} giveUser={giveUser} />
+                    }
+                  />
+                  <Route
+                    exact
+                    path="/account"
+                    element={<Account token={token} />}
+                  />
+                  <Route
+                    exact
+                    path="/user/username-password"
+                    element={<ChangePasswordUser token={token} />}
+                  />
+                  <Route
+                    exact
+                    path="/gardener-login"
+                    element={
+                      <GardenerLogin
+                        giveGardToken={giveGardToken}
+                        giveGard={giveGard}
+                        gardener={gardener}
+                      />
+                    }
+                  />
+                  <Route
+                    exact
+                    path="/profile-completion"
+                    element={
+                      <ProfileCompletion
+                        gardener={gardener}
+                        gardToken={gardToken}
+                      />
+                    }
+                  />
+                  <Route
+                    exact
+                    path="/profile"
+                    element={
+                      <Profile
+                        gardener={gardener}
+                        gardToken={gardToken}
+                        refreshGardener={refreshGardener}
+                      />
+                    }
+                  />
+                  <Route
+                    exact
+                    path="/gardener/username-password"
+                    element={
+                      <ChangePassword
+                        gardener={gardener}
+                        gardToken={gardToken}
+                      />
                     }
                   />
                   <Route
@@ -190,12 +289,25 @@ function App() {
                     path="/admin/all-users"
                     element={<AllUsers admin={admin} adminToken={adminToken} />}
                   />
+                  <Route
+                    exact
+                    path="/admin/all-gardeners"
+                    element={
+                      <AllGardeners admin={admin} adminToken={adminToken} />
+                    }
+                  />
                   <Route exact path="/signUp" element={<SignUp />} />
+                  <Route
+                    exact
+                    path="/gardener-signUp"
+                    element={<GardenerSignUp />}
+                  />
                   <Route exact path="/about" element={<About />} />
                   <Route exact path="/contactUs" element={<Contact />} />
                   <Route exact path="/NotSignedIn" element={<NotSignedIn />} />
                   <Route path="*" element={<NotFound />} />
                 </Routes>
+                <Footer />
               </Suspense>
             </UserContext.Provider>
           </ProductsContext.Provider>

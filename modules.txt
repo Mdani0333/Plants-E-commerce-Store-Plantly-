@@ -15,6 +15,7 @@ details page-->payment method(pay on delivery)(pay throught card{stripe})-->Summ
 
 5--//Exhibition module.--->???<---
 6--//making full website responsive.--->???<---
+8--//get and set cookies//still login on browser Refresh//secure routing for all routes 
 
 7--//Gradener hiring Module(*_*)
 Gradener login/signUp-->profile completion-->Upload info-->change status and remove info(CV)-->Gardener mode will be On.

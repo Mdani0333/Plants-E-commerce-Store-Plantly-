@@ -4,7 +4,7 @@
   margin: 0 5px;
   color: #111;
 }
-.icons:hover{
+.icons:hover {
   color: #00ba69;
 }
 /* span */
@@ -19,6 +19,7 @@
   color: #00ba69;
 }
 
+
 /* buttons */
 .btn {
   font-size: larger;
@@ -26,16 +27,20 @@
   margin: 0 3px;
 }
 
+.display-none {
+  display: none;
+}
+
 #flx {
   display: flex;
   flex-direction: row;
-  justify-content: center;
+  justify-content: right;
   align-items: center;
   margin: 0 20px;
 }
 
 /* all links tag */
-.links{
+.links {
   text-decoration: none;
   font-size: 1.3rem;
   color: black;
@@ -48,7 +53,7 @@
 .nav {
   display: flex;
   flex-direction: row;
-  justify-content: space-between;
+  justify-content: space-around;
   align-items: center;
   box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
   width: 100%;
@@ -148,14 +153,14 @@
   transition: 0.25s ease-in-out;
   padding: 45px;
 }
-.hm-col{
+.hm-col {
   display: flex;
   flex-direction: column;
   flex-wrap: wrap;
   justify-content: center;
   align-items: center;
 }
-.hm-row{
+.hm-row {
   display: flex;
   flex-direction: row;
   justify-content: center;

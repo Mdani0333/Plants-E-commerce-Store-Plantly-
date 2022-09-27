@@ -4,10 +4,11 @@ import { BiShoppingBag } from "react-icons/bi";
 import { BiHeart } from "react-icons/bi";
 import { BiUser } from "react-icons/bi";
 import { ImLeaf } from "react-icons/im";
+import { AiOutlineSearch } from "react-icons/ai";
 import { Link } from "react-router-dom";
 import { UserContext } from "../context-hooks/UserContext";
 
-export default function Navbar({ token, adminToken }) {
+export default function Navbar({ token, adminToken, gardToken, gardener }) {
   const user = useContext(UserContext);
 
   function hm_nav() {
@@ -28,32 +29,71 @@ export default function Navbar({ token, adminToken }) {
           <h1 className="logo_label">
             Plantly<span className="logo_dot">.</span>
           </h1>
+          {token || gardToken || adminToken ? (
+            <div className="display-none"></div>
+          ) : (
+            <form className="flex">
+              <input
+                class="form-control"
+                type="search"
+                placeholder="Search"
+                aria-label="Search"
+              />
+              <AiOutlineSearch className="icons" />
+            </form>
+          )}
         </div>
         <div id="flx">
-          <Link to="/" className="links">
-            Home
-          </Link>
-          <Link to="/about" className="links">
-            About
-          </Link>
-          <Link to="/contactUs" className="links">
-            Contact
-          </Link>
+          {Object.keys(gardener).length === 0 ? (
+            <div>
+              <Link to="/" className="links">
+                Home
+              </Link>
+              <Link to="/shop" className="links">
+                Shop
+              </Link>
+              <Link to="/about" className="links">
+                About
+              </Link>
+              <Link to="/contactUs" className="links">
+                Contact
+              </Link>
+            </div>
+          ) : (
+            <div className="display-none"></div>
+          )}
+          {token || adminToken || gardToken ? (
+            <div>
+              <Link to="/hire-gardeners" className="links">
+                Hire Gardeners
+              </Link>
+            </div>
+          ) : (
+            <div className="display-none"></div>
+          )}
         </div>
         <div id="flx">
-          <Link to="/my/favourites">
-            <BiHeart className="icons" />
-          </Link>
-          <Link to="/my/cart">
-            <BiShoppingBag className="icons" />
-          </Link>
-          <Link to="/account">
+          {Object.keys(gardener).length === 0 ? (
+            <div>
+              <Link to="/my/favourites">
+                <BiHeart className="icons" />
+              </Link>
+              <Link to="/my/cart">
+                <BiShoppingBag className="icons" />
+              </Link>
+            </div>
+          ) : (
+            <div className="display-none"></div>
+          )}
+          <Link to={token ? "/account" : "/profile"}>
             <BiUser className="icons" />
           </Link>
           {token ? (
             <span className="greenSpan">{user.name}</span>
           ) : adminToken ? (
             <span className="greenSpan">Admin Mode On</span>
+          ) : gardToken ? (
+            <span className="greenSpan">{gardener.name}</span>
           ) : (
             <span className="redSpan">
               Login <Link to="/login">here</Link>

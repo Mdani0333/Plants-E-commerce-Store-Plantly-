@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 import { FiPlus, FiMinus } from "react-icons/fi";
 import { GiCancel } from "react-icons/gi";
 
-export function CartItem({ remove, item, index }) {
+export function CartItem({ remove, item }) {
   const [quantity, setQuantity] = useState(1);
 
   function incQuantity() {
@@ -15,7 +15,7 @@ export function CartItem({ remove, item, index }) {
   }
 
   return (
-    <div className="cart-item" key={item.id}>
+    <div className="cart-item">
       <img src={item.image} alt="" />
       <span>
         <p>-{item.specie}</p>

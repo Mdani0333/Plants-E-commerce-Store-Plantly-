@@ -8,6 +8,8 @@ const adminSignUp = require("./routes/adminSignUp");
 const authRoutes = require("./routes/auth");
 const adminAuth = require("./routes/adminAuth");
 const productRoutes = require("./routes/product");
+const gardenerAuth = require("./routes/gardenerAuth");
+const gardenerSignUp = require("./routes/gardenerSignUp");
 
 //connecting to mongoDB
 connection();
@@ -18,9 +20,13 @@ app.use(cors());
 
 //routes
 app.use("/user", userRoutes);
+app.use("/gardener", gardenerSignUp);
 app.use("/admin/signUp", adminSignUp);
+
 app.use("/auth", authRoutes);
+app.use("/gardener/login", gardenerAuth);
 app.use("/admin/login", adminAuth);
+
 app.use("/products", productRoutes);
 
 //Server running on localhost

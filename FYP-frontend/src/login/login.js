@@ -98,6 +98,13 @@ export function Login({ giveToken, giveUser }) {
         <p>
           Doesn't have an account <Link to="/signUp">Register</Link>
         </p>
+        <p>
+          If you're a gardener than login <Link to="/gardener-login">here</Link>
+        </p>
+        <p>
+          Login for Admin only <Link to="/admin/login">here</Link>
+        </p>
+        <br />
         {error && <div className="redSpan">{error}</div>}
       </form>
     </div>

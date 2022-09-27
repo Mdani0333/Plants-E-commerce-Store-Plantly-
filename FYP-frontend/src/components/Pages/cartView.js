@@ -6,12 +6,26 @@ import { UserContext } from "../../context-hooks/UserContext";
 import { useContext } from "react";
 import { CartItem } from "./cartItem";
 import NotSignedIn from "./NotSignedIn";
+import axios from "axios";
 
-export function CartView({ remove }) {
+export function CartView({ refreshUser }) {
   const user = useContext(UserContext);
   const [total, setTotal] = useState(0);
 
-  console.log(user);
+  const [cart, setCart] = useState([]);
+
+  const remove = async (id) => {
+    setCart(user.cart);
+    cart.splice(
+      cart.findIndex((x) => x._id === id),
+      1
+    );
+    const url = `http://localhost:8080/user/cart/${user._id}`;
+    const { data: res } = await axios.patch(url, cart);
+    console.log(res.message);
+    refreshUser();
+  };
+
   return (
     <div>
       {Object.keys(user).length === 0 ? (
@@ -25,7 +39,7 @@ export function CartView({ remove }) {
           <br />
           {user.cart.length != 0 ? (
             user.cart.map((item, index) => (
-              <CartItem remove={remove} item={item} index={index} />
+              <CartItem remove={remove} item={item} key={index} />
             ))
           ) : (
             <div className="empty-page">

@@ -36,3 +36,12 @@
 .link:hover {
   color: #00ba69;
 }
+
+.all-ug{
+  display: flex;
+  flex-direction: column;
+  width: 30%;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-top: 20px;
+}

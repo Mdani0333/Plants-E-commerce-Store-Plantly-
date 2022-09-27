@@ -1,13 +1,29 @@
-import React from "react";
-import { Link } from "react-router-dom";
+import React, { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import { UserContext } from "../../context-hooks/UserContext";
 import { useContext } from "react";
 import { BiHeart } from "react-icons/bi";
 import "./favourites.css";
 import NotSignedIn from "./NotSignedIn";
+import axios from "axios";
 
-export function Favourites({ removeFromFav }) {
+export function Favourites({ refreshUser }) {
   const user = useContext(UserContext);
+  console.log(user);
+
+  const [fav, setFav] = useState([]);
+
+  const remove = async (id) => {
+    setFav(user.favourites);
+    fav.splice(
+      fav.findIndex((x) => x._id === id),
+      1
+    );
+    const url = `http://localhost:8080/user/fav/${user._id}`;
+    const { data: res } = await axios.patch(url, fav);
+    console.log(res.message);
+    refreshUser();
+  };
 
   return (
     <div>
@@ -22,8 +38,8 @@ export function Favourites({ removeFromFav }) {
           <br />
           {user.favourites.length != 0 ? (
             <div className="fav-box">
-              {user.favourites.map((item) => (
-                <div className="product-card" key={item.id}>
+              {user.favourites.map((item, index) => (
+                <div className="product-card" key={index}>
                   <img src={item.image} alt="" className="product-img" />
                   <div className="product-text-padding">
                     <p>-{item.specie}</p>
@@ -40,7 +56,7 @@ export function Favourites({ removeFromFav }) {
                     </label>
                     <button
                       className="product-btn"
-                      onClick={() => removeFromFav(item.id)}
+                      onClick={() => remove(item.id)}
                     >
                       Remove from Favourites
                     </button>

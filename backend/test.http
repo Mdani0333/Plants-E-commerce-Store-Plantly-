@@ -3,10 +3,10 @@ content-type: application/json
 
 {
         "id":1,
-        "name":"Pink Dragon",
-        "category":"indoorPlant",
+        "name":"Sani Sahil",
+        "category":"agricultural",
         "specie":"Alocasia Baginda",
-        "instock":2,
+        "instock":12,
         "price":24.99,
         "description":"Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse gravida interdum tincidunt. Donec urna justo, porttitor vitae ultricies non, ornare quis arcu. Orci varius natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Curabitur interdum aliquet arcu nec bibendum. Aenean sed tellus vel leo accumsan tempor. In fringilla elit ac quam laoreet, sed bibendum lacus imperdiet. Quisque non sagittis augue",
         "temprature":"18-28",
@@ -23,5 +23,5 @@ content-type: application/json
             "poisonous":true,
             "deathOnConsumption":true
         },
-        "image":"https://www.dropbox.com/s/wpcb2trcx19ngca/IMG_20220721_104821-removebg-preview.png?raw=1"
+        "image":"https://www.dropbox.com/s/aclgzvf3zvadk0i/sanni-sahil-LEaK1Lmd1a8-unsplash-removebg-preview.png?raw=1"
     }

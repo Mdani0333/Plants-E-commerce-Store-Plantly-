@@ -32,6 +32,11 @@ export default function Menu({ admin, adminToken }) {
                 <h3>3. Manage users</h3>
               </Link>
             </div>
+            <div className="menu-option">
+              <Link to="/admin/all-gardeners" className="link">
+                <h3>4. Manage gardeners</h3>
+              </Link>
+            </div>
           </div>
         </div>
       ) : (

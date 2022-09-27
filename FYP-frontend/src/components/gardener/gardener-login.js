@@ -1,19 +1,16 @@
 import React, { useState } from "react";
-import "./form.css";
 import { Link, useNavigate } from "react-router-dom";
+import "../../login/form.css";
 import axios from "axios";
 
-export function SignUp() {
+export function GardenerLogin({ giveGardToken, giveGard, gardener }) {
   //States
   const [data, setData] = useState({
     name: "",
     email: "",
     password: "",
-    paymentDetails: [],
-    cart: [],
-    favourites: [],
-    shoppingHistory: [],
   });
+
   const [error, setError] = useState();
 
   //Handlechange
@@ -26,10 +23,16 @@ export function SignUp() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const url = "http://localhost:8080/user";
+      const url = "http://localhost:8080/gardener/login";
       const { data: res } = await axios.post(url, data);
       console.log(res.message);
-      navigate("/login");
+      giveGardToken(res.data);
+      giveGard(res.gardener);
+      console.log(res.gardener);
+
+      Object.keys(res.gardener.resume).length === 0
+        ? navigate("/profile-completion")
+        : navigate("/profile");
     } catch (error) {
       if (
         (error.response && error.response.status >= 400) ||
@@ -43,7 +46,7 @@ export function SignUp() {
   return (
     <div>
       <form className="form-container" onSubmit={handleSubmit}>
-        <h3>SignUp</h3>
+        <h3>Gardener--Login</h3>
         <br />
         <div class="form-group">
           <label for="exampleInputUsername1">Name</label>
@@ -92,13 +95,15 @@ export function SignUp() {
         <br />
 
         <button type="submit" class="btn btn-primary">
-          SignUp
+          Login
         </button>
         <br />
 
         <p>
-          Already have an account <Link to="/login">Login</Link>
+          Doesn't have an account Register{" "}
+          <Link to="/gardener-signUp">here</Link>
         </p>
+        <br />
         {error && <div className="redSpan">{error}</div>}
       </form>
     </div>

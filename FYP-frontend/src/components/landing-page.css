@@ -1,0 +1,127 @@
+.header {
+  position: relative;
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+  justify-content: center;
+  align-items: center;
+  background-color: #f8f8ff;
+}
+
+.header-image {
+  width: 30%;
+}
+
+.des-col {
+  display: flex;
+  flex-direction: column;
+}
+
+.h-green {
+  color: #00ba69;
+}
+
+/* //section */
+.sections {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  padding: 3rem;
+}
+.section {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: flex-start;
+  border: 2px solid #ebecf0;
+  border-radius: 5px;
+  box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+  margin: 0 10px;
+  padding: 1.2rem 2.5rem 0.5rem 2.5rem;
+}
+.section-icon {
+  color: #00ba69;
+  font-size: 3.2rem;
+  margin-right: 5px;
+}
+
+/* types */
+.plant-types {
+  margin-left: 8rem;
+  margin-top: 3rem;
+}
+.types-div {
+  margin-bottom: 5rem;
+}
+.types-row {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+}
+.types-box {
+  position: relative;
+  border-radius: 12px;
+  margin: 10px 10px;
+  box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+}
+.types-box:hover {
+  border: 2px solid #00ba69;
+}
+.types-images {
+  border-radius: 12px;
+  width: 350px;
+  height: 300px;
+  object-fit: contain;
+  background-color: #f8f8ff;
+}
+.types-h {
+  position: absolute;
+  color: #00ba69;
+  top: 10px;
+  left: 20px;
+}
+
+/* gift box */
+.gift-boxes {
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+  justify-content: space-between;
+  align-items: center;
+  position: relative;
+  /* border: 1px solid red; */
+  background-color: #f8f8ff;
+}
+
+.gift-img {
+  /* border: 1px solid red; */
+}
+.gift-col {
+  /* border: 1px solid red; */
+  margin-left: 20rem;
+}
+
+/* about us */
+.about-us-div {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+}
+.about-logo {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  width: 200px;
+}
+.about-us {
+  margin-top: 5rem;
+  margin-bottom: 5rem;
+  width: 800px;
+}
+.italic {
+  font-style: italic;
+}

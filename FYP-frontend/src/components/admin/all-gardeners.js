@@ -6,26 +6,26 @@ import { UserContext } from "../../context-hooks/UserContext";
 import axios from "axios";
 import NotFound from "../Pages/NotFound";
 
-export function AllUsers({ admin, adminToken }) {
-  const [users, setUsers] = useState([]);
+export function AllGardeners({ admin, adminToken }) {
+  const [gardeners, setGardeners] = useState([]);
 
-  function getAllusers() {
-    axios.get("http://localhost:8080/user/all-users").then(function (res) {
-      setUsers(res.data);
+  function getAllgardeners() {
+    axios.get("http://localhost:8080/gardener/all-gardeners").then(function (res) {
+      setGardeners(res.data);
     });
   }
 
   useEffect(() => {
-    getAllusers();
+    getAllgardeners();
   }, []);
 
   function remove(_id) {
     console.log(_id);
     axios
-      .delete(`http://localhost:8080/user/delete/${_id}`)
+      .delete(`http://localhost:8080/gardener/delete/${_id}`)
       .then(function (res) {
         console.log(res.data);
-        getAllusers();
+        getAllgardeners();
       });
   }
 
@@ -33,9 +33,9 @@ export function AllUsers({ admin, adminToken }) {
     <div>
       {adminToken ? (
         <div className="cart-container">
-          <h2>All Users</h2>
+          <h2>All Gardeners</h2>
           <br />
-          {users.map((item, index) => {
+          {gardeners.map((item, index) => {
             return (
               <div className="cart-item" key={index}>
                 <div className="all-ug">
