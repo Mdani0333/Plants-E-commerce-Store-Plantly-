@@ -9,13 +9,6 @@ const adminSchema = new mongoose.Schema({
   password: { type: String, required: true },
 });
 
-adminSchema.methods.generateAuthToken = function () {
-  const token = jwt.sign({ _id: this._id }, process.env.JWTPRIVATEKEY, {
-    expiresIn: "7d",
-  });
-  return token;
-};
-
 const Admin = mongoose.model("admin", adminSchema);
 
 const validate = (data) => {

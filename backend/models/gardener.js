@@ -31,13 +31,6 @@ const gardenerSchema = new mongoose.Schema({
   resume: [resumeSchema],
 });
 
-gardenerSchema.methods.generateAuthToken = function () {
-  const token = jwt.sign({ _id: this._id }, process.env.JWTPRIVATEKEY, {
-    expiresIn: "7d",
-  });
-  return token;
-};
-
 const Gardener = mongoose.model("gardener", gardenerSchema);
 
 const validate = (data) => {

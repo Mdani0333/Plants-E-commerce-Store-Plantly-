@@ -1,0 +1,3 @@
+GET http://localhost:8080/gardener/all-gardeners
+content-type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhZG1pbklkIjoiNjMyNTk5YWRlZGE0OGZkMjE0ZmExNmExIiwidG9rZW5UeXBlIjoiQURNSU4iLCJpYXQiOjE2Njc1MDI2NzcsImV4cCI6MTY2ODEwNzQ3N30.Y7-mxK0CdkRrhHjNEZUWeAvqxV4CjkHu_d_5hhMmbjA

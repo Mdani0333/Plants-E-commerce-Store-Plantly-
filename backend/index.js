@@ -3,13 +3,10 @@ const express = require("express");
 const app = express();
 const cors = require("cors");
 const connection = require("./db");
-const userRoutes = require("./routes/user");
-const adminSignUp = require("./routes/adminSignUp");
-const authRoutes = require("./routes/auth");
-const adminAuth = require("./routes/adminAuth");
-const productRoutes = require("./routes/product");
-const gardenerAuth = require("./routes/gardenerAuth");
-const gardenerSignUp = require("./routes/gardenerSignUp");
+const userRoutes = require("./routes/User");
+const adminRoutes = require("./routes/Admin");
+const gardenerRoutes = require("./routes/Gardener");
+const productsRoutes = require("./routes/Products");
 
 //connecting to mongoDB
 connection();
@@ -20,14 +17,9 @@ app.use(cors());
 
 //routes
 app.use("/user", userRoutes);
-app.use("/gardener", gardenerSignUp);
-app.use("/admin/signUp", adminSignUp);
-
-app.use("/auth", authRoutes);
-app.use("/gardener/login", gardenerAuth);
-app.use("/admin/login", adminAuth);
-
-app.use("/products", productRoutes);
+app.use("/gardener", gardenerRoutes);
+app.use("/admin", adminRoutes);
+app.use("/products", productsRoutes);
 
 //Server running on localhost
 const port = process.env.PORT || 8080;
