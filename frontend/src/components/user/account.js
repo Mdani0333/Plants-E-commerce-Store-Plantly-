@@ -5,9 +5,23 @@ import NotSignedIn from "../Pages/NotSignedIn";
 import { UserContext } from "../../context-hooks/UserContext";
 import { MdEmail } from "react-icons/md";
 import "./account.css";
+import { useCookies } from "react-cookie";
 
-export function Account({ token }) {
+export function Account({ token, giveUser, giveToken }) {
   const user = useContext(UserContext);
+
+  //cookie
+  const [cookies, setCookie] = useCookies(["UserToken"]);
+
+  const navigate = useNavigate();
+
+  function Logout() {
+    setCookie("UserToken", "", { path: "/" });
+    giveToken("");
+    localStorage.removeItem("User");
+    giveUser({});
+    navigate("/");
+  }
   return (
     <div>
       {token ? (
@@ -55,7 +69,9 @@ export function Account({ token }) {
             <br />
 
             <div>
-              <button class="btn btn-danger">Logout</button>
+              <button class="btn btn-danger" onClick={() => Logout()}>
+                Logout
+              </button>
             </div>
           </div>
         </div>

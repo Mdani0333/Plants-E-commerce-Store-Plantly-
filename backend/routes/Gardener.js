@@ -1,7 +1,11 @@
 const router = require("express").Router();
 const { Gardener, validate } = require("../models/gardener");
 const bcrypt = require("bcrypt");
-const { VerifyGardenerToken, VerifyAdminToken } = require("../jwt/Auth");
+const {
+  VerifyGardenerToken,
+  VerifyAdminToken,
+  VerifyUserToken,
+} = require("../jwt/Auth");
 const jwt = require("jsonwebtoken");
 
 //gardener signUp
@@ -30,40 +34,44 @@ router.post("/signUp", async (req, res) => {
 //gardener Login
 router.post("/login", async (req, res) => {
   try {
-    const { error } = validate(req.body);
-    if (error)
-      return res.status(400).send({ message: error.details[0].message });
+    if (req.body.email) {
+      const gardener = await Gardener.findOne({ email: req.body.email });
+      if (!gardener)
+        return res.status(401).send({ message: "invalid Email or Password" });
 
-    const gardener = await Gardener.findOne({ email: req.body.email });
-    if (!gardener)
-      return res.status(401).send({ message: "invalid Email or Password" });
+      if (req.body.password) {
+        const validPassword = await bcrypt.compare(
+          req.body.password,
+          gardener.password
+        );
+        if (!validPassword)
+          return res.status(401).send({ message: "invalid email or password" });
 
-    const validPassword = await bcrypt.compare(
-      req.body.password,
-      gardener.password
-    );
-    if (!validPassword)
-      return res.status(401).send({ message: "invalid email or password" });
-
-    const gardenerToken = jwt.sign(
-      { gardenerId: gardener._id, tokenType: "GARDENER" },
-      process.env.JWT_PRIVATE_KEY,
-      {
-        expiresIn: "7d",
+        const gardenerToken = jwt.sign(
+          { gardenerId: gardener._id, tokenType: "GARDENER" },
+          process.env.JWT_PRIVATE_KEY,
+          {
+            expiresIn: "7d",
+          }
+        );
+        res.status(200).send({
+          Token: gardenerToken,
+          Role: "GARDENER",
+          Gardener: gardener,
+        });
+      } else {
+        res.status(401).send({ message: "Password is not provided!" });
       }
-    );
-    res.status(200).send({
-      token: gardenerToken,
-      gardener: gardener,
-      message: "Logged in Successfully",
-    });
+    } else {
+      res.status(401).send({ message: "Email is not provided!" });
+    }
   } catch (error) {
     res.status(500).send({ message: "Server Error" });
   }
 });
 
 //getting all gardeners
-router.get("/all-gardeners", VerifyAdminToken, async (req, res) => {
+router.get("/all-gardeners", async (req, res) => {
   try {
     const all = await Gardener.find().limit(20);
     res.status(201).send(all);

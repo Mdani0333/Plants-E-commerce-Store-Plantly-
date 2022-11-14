@@ -8,23 +8,9 @@ import { CartItem } from "./cartItem";
 import NotSignedIn from "./NotSignedIn";
 import axios from "axios";
 
-export function CartView({ refreshUser }) {
+export function CartView({ removeFromCart }) {
   const user = useContext(UserContext);
   const [total, setTotal] = useState(0);
-
-  const [cart, setCart] = useState([]);
-
-  const remove = async (id) => {
-    setCart(user.cart);
-    cart.splice(
-      cart.findIndex((x) => x._id === id),
-      1
-    );
-    const url = `http://localhost:8080/user/cart/${user._id}`;
-    const { data: res } = await axios.patch(url, cart);
-    console.log(res.message);
-    refreshUser();
-  };
 
   return (
     <div>
@@ -39,7 +25,11 @@ export function CartView({ refreshUser }) {
           <br />
           {user.cart.length != 0 ? (
             user.cart.map((item, index) => (
-              <CartItem remove={remove} item={item} key={index} />
+              <CartItem
+                removeFromCart={removeFromCart}
+                item={item}
+                key={index}
+              />
             ))
           ) : (
             <div className="empty-page">

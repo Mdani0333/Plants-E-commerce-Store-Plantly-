@@ -1,11 +1,11 @@
 import "./productView.css";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { useContext } from "react";
 import { ProductsContext } from "../../context-hooks/ProductsContext";
 import { UserContext } from "../../context-hooks/UserContext";
 import { BiShoppingBag } from "react-icons/bi";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { MdOutlineWaterDrop } from "react-icons/md";
 import { FaTemperatureHigh } from "react-icons/fa";
 import { MdOutlineLightMode } from "react-icons/md";
@@ -13,48 +13,17 @@ import { WiHumidity } from "react-icons/wi";
 import { RiLineHeight } from "react-icons/ri";
 import { BiHeart } from "react-icons/bi";
 import { RiAlarmWarningLine } from "react-icons/ri";
-import axios from "axios";
 
-export function View({ refreshUser }) {
+export function View({ addToCart, addToFav }) {
   const { id } = useParams();
   const products = useContext(ProductsContext);
-
   const user = useContext(UserContext);
 
-  const [cart, setCart] = useState([]);
+  const [view, setView] = useState(products.find((x) => x._id == id));
 
-  const navigate = useNavigate();
-  const addToCart = async (id, item) => {
-    if (user.cart.some((x) => x._id === id)) {
-      alert("This product is already in cart");
-    } else {
-      setCart(user.cart);
-      cart.push(item);
-      const url = `http://localhost:8080/user/cart/${user._id}`;
-      const { data: res } = await axios.patch(url, cart);
-      console.log(res.message);
-      refreshUser();
-      navigate("/my/cart");
-    }
-  };
-
-  const [fav, setFav] = useState([]);
-
-  const addToFav = async (id, item) => {
-    if (user.favourites.some((x) => x._id === id)) {
-      alert("This product is already in Favourites");
-    } else {
-      setFav(user.favourites);
-      fav.push(item);
-      const url = `http://localhost:8080/user/fav/${user._id}`;
-      const { data: res } = await axios.patch(url, fav);
-      console.log(res.message);
-      refreshUser();
-      navigate("/my/favourites");
-    }
-  };
-
-  const view = products.find((x) => x._id == id);
+  useEffect(() => {
+    setView(products.find((x) => x._id == id));
+  }, []);
   return (
     <section className="flex-container" key={view._id}>
       <div className="flex-item1">
@@ -73,23 +42,27 @@ export function View({ refreshUser }) {
             )}
           </label>
           {view.instock ? (
-            <button
-              className="product-btn"
-              onClick={() => addToCart(view._id, view)}
+            <Link
+              to={Object.keys(user).length === 0 ? "/NotSignedIn" : "/my/cart"}
             >
-              Add to Cart
-              <BiShoppingBag />
-            </button>
+              <button className="product-btn" onClick={() => addToCart(view)}>
+                Add to Cart
+                <BiShoppingBag />
+              </button>
+            </Link>
           ) : (
-            "block"
+            <></>
           )}
-          <button
-            className="product-btn"
-            onClick={() => addToFav(view._id, view)}
+          <Link
+            to={
+              Object.keys(user).length === 0 ? "/NotSignedIn" : "/my/favourites"
+            }
           >
-            Add to Favourites
-            <BiHeart />
-          </button>
+            <button className="product-btn" onClick={() => addToFav(view)}>
+              Add to Favourites
+              <BiHeart />
+            </button>
+          </Link>
         </div>
         <img src={view.image} alt="" className="viewImg" />
       </div>

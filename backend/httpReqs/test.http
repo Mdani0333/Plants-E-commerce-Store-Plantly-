@@ -1,8 +1,10 @@
-POST http://localhost:8080/products/post
+PATCH http://localhost:8080/user/fav
 content-type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2MzZmNzMwZWMxMTNhYzc5MTQyZjlmOTEiLCJ0b2tlblR5cGUiOiJVU0VSIiwiaWF0IjoxNjY4MjU4MjQyLCJleHAiOjE2Njg4NjMwNDJ9.s2AMFj0CLyblSfrxmT8Kux4CW1e4iEdDBKrgVIBWzpk
 
 {
-        "id":1,
+    "method": "PUSH",
+    "product": {
         "name":"Sani Sahil",
         "category":"agricultural",
         "specie":"Alocasia Baginda",
@@ -25,3 +27,4 @@ content-type: application/json
         },
         "image":"https://www.dropbox.com/s/aclgzvf3zvadk0i/sanni-sahil-LEaK1Lmd1a8-unsplash-removebg-preview.png?raw=1"
     }
+}

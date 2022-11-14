@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 import { FiPlus, FiMinus } from "react-icons/fi";
 import { GiCancel } from "react-icons/gi";
 
-export function CartItem({ remove, item }) {
+export function CartItem({ removeFromCart, item }) {
   const [quantity, setQuantity] = useState(1);
 
   function incQuantity() {
@@ -53,7 +53,10 @@ export function CartItem({ remove, item }) {
           </button>
         </span>
       </span>
-      <GiCancel className="remove-btn" onClick={() => remove(item.id)} />
+      <GiCancel
+        className="remove-btn"
+        onClick={() => removeFromCart(item._id)}
+      />
     </div>
   );
 }

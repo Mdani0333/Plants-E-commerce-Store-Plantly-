@@ -5,19 +5,20 @@ import axios from "axios";
 import NotFound from "../Pages/NotFound";
 import { UserContext } from "../../context-hooks/UserContext";
 
-export function ChangePasswordUser({ token }) {
+export function ChangePasswordUser({ token, refreshUser }) {
   const user = useContext(UserContext);
 
   //States
   const [data, setData] = useState({
     name: user.name,
-    password: "",
+    oldPassword: "",
+    newPassword: "",
   });
 
   const [showPassword, setShowPassword] = useState(false);
 
   const [error, setError] = useState();
-  const [success, setSuccess] = useState();
+  const [success, setSuccess] = useState("");
 
   //Handlechange
   function handleChange({ currentTarget: input }) {
@@ -25,30 +26,25 @@ export function ChangePasswordUser({ token }) {
   }
 
   //axois request
-  const navigate = useNavigate();
   const handleSubmit = async (e) => {
     e.preventDefault();
-    try {
-      const url = "http://localhost:8080/admin/login";
-      const { data: res } = await axios.post(url, data);
-      console.log(res.message);
-      navigate("/admin");
-      //   giveAdminToken(res.data);
-      //   giveAdmin(res.admin);
-    } catch (error) {
-      if (
-        (error.response && error.response.status >= 400) ||
-        error.response.status <= 500
-      ) {
-        setError(error.response.data.message);
-      }
-    }
+    axios
+      .patch("http://localhost:8080/user/changePassword", data, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      })
+      .then(function (res) {
+        setSuccess(res.data.message);
+        refreshUser();
+      })
+      .catch((e) => setError(e.message));
   };
 
   return (
     <div>
       {token ? (
-        <form className="form-container">
+        <form className="form-container" action={() => handleSubmit()}>
           <h3>Change Username or password</h3>
           <br />
           <div class="form-group">
@@ -67,18 +63,33 @@ export function ChangePasswordUser({ token }) {
           <br />
 
           <div class="form-group">
+            <label for="exampleInputPassword2">Old Password</label>
+            <input
+              type={showPassword ? "text" : "password"}
+              class="form-control"
+              id="exampleInputPassword2"
+              placeholder="Old Password"
+              value={data.oldPassword}
+              onChange={handleChange}
+              required
+              name="oldPassword"
+            />
+          </div>
+
+          <div class="form-group">
             <label for="exampleInputPassword1">New Password</label>
             <input
               type={showPassword ? "text" : "password"}
               class="form-control"
               id="exampleInputPassword1"
-              placeholder="Password"
-              value={data.password}
+              placeholder="New Password"
+              value={data.newPassword}
               onChange={handleChange}
               required
-              name="password"
+              name="newPassword"
             />
           </div>
+
           <div class="form-check form-check-inline">
             <input
               class="form-check-input"
