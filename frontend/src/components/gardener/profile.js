@@ -8,15 +8,35 @@ import NotSignedIn from "../Pages/NotSignedIn";
 import { MdDeleteForever } from "react-icons/md";
 import { FiEdit } from "react-icons/fi";
 import { FaDownload } from "react-icons/fa";
+import { useCookies } from "react-cookie";
 
-export function Profile({ gardToken, gardener, refreshGardener }) {
+export function Profile({
+  gardToken,
+  gardener,
+  refreshGardener,
+  giveGard,
+  giveGardToken,
+}) {
   useEffect(() => {
     refreshGardener();
   }, []);
 
+  //cookie
+  const [cookies, setCookie] = useCookies(["GardToken"]);
+
+  const navigate = useNavigate();
+
   //states
   const [status, setStatus] = useState("");
   console.log(status);
+
+  function Logout() {
+    setCookie("GardToken", "", { path: "/" });
+    giveGardToken("");
+    localStorage.removeItem("Gardener");
+    giveGard({});
+    navigate("/");
+  }
 
   return (
     <div>
@@ -65,7 +85,7 @@ export function Profile({ gardToken, gardener, refreshGardener }) {
                 <h4 className="resume-h">Resume</h4>
                 <div className="resume">
                   <span className="edit-delete-option">
-                    <FaDownload className="download-icon"/>
+                    <FaDownload className="download-icon" />
                     <Link
                       to={`/gardener/edit-resume/${gardener._id}`}
                       className="link"
@@ -168,7 +188,9 @@ export function Profile({ gardToken, gardener, refreshGardener }) {
             </div>
 
             <div class="logout">
-              <button class="btn btn-danger">Logout</button>
+              <button class="btn btn-danger" onClick={() => Logout()}>
+                Logout
+              </button>
             </div>
           </div>
         </div>

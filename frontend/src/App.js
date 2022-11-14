@@ -35,8 +35,12 @@ import { HireGard } from "./components/hire-gardener/hire-gardeners";
 import { VisitProfile } from "./components/hire-gardener/visit-profile";
 import { LandingPage } from "./components/landing-page";
 import Footer from "./components/footer";
+import { useCookies } from "react-cookie";
 
 function App() {
+  //cookie
+  const [cookies, setCookie] = useCookies();
+
   const [loading, setLoading] = useState(true);
   const [page, setPage] = useState(false);
 
@@ -44,8 +48,12 @@ function App() {
   const [products, setProducts] = useState([]);
 
   //user
-  const [token, setToken] = useState("");
-  const [user, setUser] = useState({});
+  const [token, setToken] = useState(cookies.UserToken || "");
+  // console.log(token);
+  const [user, setUser] = useState(
+    localStorage.getItem("User") ? JSON.parse(localStorage.getItem("User")) : {}
+  );
+  console.log(user);
   function giveToken(data) {
     setToken(data);
   }
@@ -55,15 +63,23 @@ function App() {
   //refreshing single user
   function refreshUser() {
     axios
-      .get(`http://localhost:8080/user/get/${user._id}`)
+      .get("http://localhost:8080/user/get", {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      })
       .then(function (res) {
         setUser(res.data);
       });
   }
 
   //gardener
-  const [gardToken, setGardToken] = useState("");
-  const [gardener, setGardener] = useState({});
+  const [gardToken, setGardToken] = useState(cookies.GardToken || "");
+  const [gardener, setGardener] = useState(
+    localStorage.getItem("Gardener")
+      ? JSON.parse(localStorage.getItem("Gardener"))
+      : {}
+  );
   function giveGardToken(data) {
     setGardToken(data);
   }
@@ -73,16 +89,23 @@ function App() {
   //refreshing single gardener
   function refreshGardener() {
     axios
-      .get(`http://localhost:8080/gardener/get/${gardener._id}`)
+      .get("http://localhost:8080/gardener/get", {
+        headers: {
+          Authorization: `Bearer ${gardToken}`,
+        },
+      })
       .then(function (res) {
         setGardener(res.data);
-        console.log(res.data);
       });
   }
 
   //admin
-  const [admin, setAdmin] = useState({});
-  const [adminToken, setAdminToken] = useState("");
+  const [admin, setAdmin] = useState(
+    localStorage.getItem("Admin")
+      ? JSON.parse(localStorage.getItem("Admin"))
+      : {}
+  );
+  const [adminToken, setAdminToken] = useState(cookies.AdminToken || "");
   function giveAdminToken(data) {
     setAdminToken(data);
   }
@@ -102,15 +125,105 @@ function App() {
   function getProducts() {
     axios.get("http://localhost:8080/products").then(function (res) {
       setProducts(res.data);
+      setLoading(false);
+      setPage(true);
     });
   }
 
   //getting only on start
   useEffect(() => {
     getProducts();
-    setLoading(false);
-    setPage(true);
   }, []);
+
+  //Adding to cart
+  function addToCart(item) {
+    console.log(item);
+    axios
+      .patch(
+        "http://localhost:8080/user/cart",
+        {
+          method: "PUSH",
+          product: item,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      )
+      .then(function (res) {
+        console.log(res.data.message);
+        refreshUser();
+      })
+      .catch((e) => console.log(e));
+  }
+
+  //Removing from cart
+  function removeFromCart(id) {
+    axios
+      .patch(
+        "http://localhost:8080/user/cart",
+        {
+          method: "PULL",
+          id: id,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      )
+      .then(function (res) {
+        console.log(res.data.message);
+        refreshUser();
+      })
+      .catch((e) => console.log(e));
+  }
+
+  //Adding to favourites
+  function addToFav(item) {
+    console.log(item);
+    axios
+      .patch(
+        "http://localhost:8080/user/fav",
+        {
+          method: "PUSH",
+          product: item,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      )
+      .then(function (res) {
+        console.log(res.data.message);
+        refreshUser();
+      })
+      .catch((e) => console.log(e));
+  }
+
+  //Removing from fav
+  function removeFromFav(id) {
+    axios
+      .patch(
+        "http://localhost:8080/user/fav",
+        {
+          method: "PULL",
+          id: id,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      )
+      .then(function (res) {
+        console.log(res.data.message);
+        refreshUser();
+      })
+      .catch((e) => console.log(e));
+  }
 
   const [categories, setCategories] = useState([
     "indoorPlant",
@@ -141,8 +254,9 @@ function App() {
                     path="/shop"
                     element={
                       <Product
-                        refreshUser={refreshUser}
                         categories={categories}
+                        addToCart={addToCart}
+                        addToFav={addToFav}
                       />
                     }
                   />
@@ -171,17 +285,17 @@ function App() {
                   <Route
                     exact
                     path="/product:id"
-                    element={<View refreshUser={refreshUser} />}
+                    element={<View addToCart={addToCart} addToFav={addToFav} />}
                   />
                   <Route
                     exact
                     path="/my/cart"
-                    element={<CartView refreshUser={refreshUser} />}
+                    element={<CartView removeFromCart={removeFromCart} />}
                   />
                   <Route
                     exact
                     path="/my/favourites"
-                    element={<Favourites refreshUser={refreshUser} />}
+                    element={<Favourites removeFromFav={removeFromFav} />}
                   />
                   <Route
                     exact
@@ -193,12 +307,23 @@ function App() {
                   <Route
                     exact
                     path="/account"
-                    element={<Account token={token} />}
+                    element={
+                      <Account
+                        token={token}
+                        giveToken={giveToken}
+                        giveUser={giveUser}
+                      />
+                    }
                   />
                   <Route
                     exact
                     path="/user/username-password"
-                    element={<ChangePasswordUser token={token} />}
+                    element={
+                      <ChangePasswordUser
+                        token={token}
+                        refreshUser={refreshUser}
+                      />
+                    }
                   />
                   <Route
                     exact
@@ -229,6 +354,8 @@ function App() {
                         gardener={gardener}
                         gardToken={gardToken}
                         refreshGardener={refreshGardener}
+                        giveGardToken={giveGardToken}
+                        giveGard={giveGard}
                       />
                     }
                   />
@@ -256,7 +383,12 @@ function App() {
                     exact
                     path="/admin"
                     element={
-                      <AdminMenu admin={admin} adminToken={adminToken} />
+                      <AdminMenu
+                        admin={admin}
+                        adminToken={adminToken}
+                        giveAdmin={giveAdmin}
+                        giveAdminToken={giveAdminToken}
+                      />
                     }
                   />
                   <Route

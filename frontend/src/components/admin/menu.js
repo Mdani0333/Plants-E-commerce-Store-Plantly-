@@ -3,8 +3,23 @@ import { Link, useNavigate } from "react-router-dom";
 import NotFound from "../Pages/NotFound";
 import { ImLeaf } from "react-icons/im";
 import "./menu.css";
+import { useCookies } from "react-cookie";
 
-export default function Menu({ admin, adminToken }) {
+export default function Menu({ admin, adminToken, giveAdmin, giveAdminToken }) {
+  //cookie
+  const [cookies, setCookie] = useCookies(["GardToken"]);
+
+  const navigate = useNavigate();
+
+  function Logout() {
+    setCookie("AdminToken", "", { path: "/" });
+    giveAdminToken("");
+
+    localStorage.removeItem("Admin");
+    giveAdmin({});
+
+    navigate("/");
+  }
   return (
     <div>
       {adminToken ? (
@@ -36,6 +51,10 @@ export default function Menu({ admin, adminToken }) {
                 <h3>4. Manage gardeners</h3>
               </Link>
             </div>
+
+            <button class="btn btn-danger" onClick={() => Logout()}>
+              Logout
+            </button>
           </div>
         </div>
       ) : (

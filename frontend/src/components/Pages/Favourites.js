@@ -5,25 +5,9 @@ import { useContext } from "react";
 import { BiHeart } from "react-icons/bi";
 import "./favourites.css";
 import NotSignedIn from "./NotSignedIn";
-import axios from "axios";
 
-export function Favourites({ refreshUser }) {
+export function Favourites({ removeFromFav }) {
   const user = useContext(UserContext);
-  console.log(user);
-
-  const [fav, setFav] = useState([]);
-
-  const remove = async (id) => {
-    setFav(user.favourites);
-    fav.splice(
-      fav.findIndex((x) => x._id === id),
-      1
-    );
-    const url = `http://localhost:8080/user/fav/${user._id}`;
-    const { data: res } = await axios.patch(url, fav);
-    console.log(res.message);
-    refreshUser();
-  };
 
   return (
     <div>
@@ -56,7 +40,7 @@ export function Favourites({ refreshUser }) {
                     </label>
                     <button
                       className="product-btn"
-                      onClick={() => remove(item.id)}
+                      onClick={() => removeFromFav(item._id)}
                     >
                       Remove from Favourites
                     </button>

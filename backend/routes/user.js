@@ -30,33 +30,35 @@ router.post("/signUp", async (req, res) => {
 //user Login
 router.post("/login", async (req, res) => {
   try {
-    const { error } = validate(req.body);
-    if (error)
-      return res.status(400).send({ message: error.details[0].message });
+    if (req.body.email) {
+      const user = await User.findOne({ email: req.body.email });
+      if (!user) return res.status(401).send({ message: "invalid Email" });
 
-    const user = await User.findOne({ email: req.body.email });
-    if (!user)
-      return res.status(401).send({ message: "invalid Email or Password" });
+      if (req.body.password) {
+        const validPassword = await bcrypt.compare(
+          req.body.password,
+          user.password
+        );
+        if (!validPassword)
+          return res.status(401).send({ message: "invalid password" });
 
-    const validPassword = await bcrypt.compare(
-      req.body.password,
-      user.password
-    );
-    if (!validPassword)
-      return res.status(401).send({ message: "invalid email or password" });
-
-    const userToken = jwt.sign(
-      { userId: user._id, tokenType: "USER" },
-      process.env.JWT_PRIVATE_KEY,
-      {
-        expiresIn: "7d",
+        const userToken = jwt.sign(
+          { userId: user._id, tokenType: "USER" },
+          process.env.JWT_PRIVATE_KEY,
+          {
+            expiresIn: "7d",
+          }
+        );
+        res.status(200).send({
+          Token: userToken,
+          User: user,
+        });
+      } else {
+        res.status(401).send({ message: "Password is not provided!" });
       }
-    );
-    res.status(200).send({
-      token: userToken,
-      user: user,
-      message: "Logged in Successfully",
-    });
+    } else {
+      res.status(401).send({ message: "Email is not provided!" });
+    }
   } catch (error) {
     res.status(500).send({ message: "Server Error" });
   }
@@ -95,18 +97,19 @@ router.delete("/delete/:id", VerifyAdminToken, async (req, res) => {
 //updating cart of a single user
 router.patch("/cart", VerifyUserToken, async (req, res) => {
   try {
-    if (req.body.method === "PUSH") {
+    if (req.body.method == "PUSH") {
       await User.updateOne(
         { _id: req.headers.userId },
-        { $push: { cart: req.body.cart } }
+        { $push: { cart: req.body.product } }
       );
-    } else if (req.body.method === "PULL") {
+      res.status(201).send({ message: "Added!" });
+    } else if (req.body.method == "PULL") {
       await User.updateOne(
         { _id: req.headers.userId },
-        { $pull: { cart: _id } }
+        { $pull: { cart: { _id: req.body.id } } }
       );
+      res.status(201).send({ message: "Removed!" });
     }
-    res.status(201).send({ message: "Added!" });
   } catch (error) {
     res.status(500).send({ message: "Server Error" });
   }
@@ -118,15 +121,48 @@ router.patch("/fav", VerifyUserToken, async (req, res) => {
     if (req.body.method === "PUSH") {
       await User.updateOne(
         { _id: req.headers.userId },
-        { $push: { favourites: req.body.cart } }
+        { $push: { favourites: req.body.product } }
       );
+      res.status(201).send({ message: "Added!" });
     } else if (req.body.method === "PULL") {
       await User.updateOne(
         { _id: req.headers.userId },
-        { $pull: { favourites: _id } }
+        { $pull: { favourites: { _id: req.body.id } } }
       );
+      res.status(201).send({ message: "Removed!" });
     }
-    res.status(201).send({ message: "Added!" });
+  } catch (error) {
+    res.status(500).send({ message: "Server Error" });
+  }
+});
+
+//updating username or password
+router.patch("/changePassword", VerifyUserToken, async (req, res) => {
+  try {
+    if (req.body.name) {
+      if (req.body.oldPassword && req.body.newPassword) {
+        const user = await User.findById(req.headers.userId);
+        const validPassword = await bcrypt.compare(
+          req.body.oldPassword,
+          user.password
+        );
+        if (!validPassword)
+          return res.status(401).send({ message: "invalid Old Password" });
+
+        const salt = await bcrypt.genSalt(Number(process.env.SALT));
+        const hashPassword = await bcrypt.hash(req.body.newPassword, salt);
+
+        await User.updateOne(
+          { _id: req.headers.userId },
+          { name: req.body.name, password: hashPassword }
+        );
+        res.status(200).send({ message: "updated!" });
+      } else {
+        res.status(401).send({ message: "Password fields can't be empty!" });
+      }
+    } else {
+      res.status(401).send({ message: "Name can't be empty!" });
+    }
   } catch (error) {
     res.status(500).send({ message: "Server Error" });
   }
