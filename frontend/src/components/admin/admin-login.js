@@ -29,7 +29,6 @@ export function AdminLogin({ giveAdminToken, giveAdmin }) {
     try {
       const url = "http://localhost:8080/admin/login";
       const { data: res } = await axios.post(url, data);
-      // console.log(res.message);
       setCookie("AdminToken", res.Token, { path: "/" });
       giveAdminToken(res.Token);
 
@@ -38,7 +37,7 @@ export function AdminLogin({ giveAdminToken, giveAdmin }) {
 
       navigate("/admin");
     } catch (error) {
-      setError(error.message);
+      setError(error.response.data.message);
     }
   };
 

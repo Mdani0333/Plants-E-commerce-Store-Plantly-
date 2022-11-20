@@ -4,17 +4,20 @@ import "../../login/form.css";
 import axios from "axios";
 import NotFound from "../Pages/NotFound";
 
-export function ChangePassword({ gardToken, gardener }) {
+export function ChangePassword({ gardToken, gardener, refreshGardener }) {
   //States
   const [data, setData] = useState({
     name: gardener.name,
-    password: "",
+    phoneNo: gardener.phoneNo,
+    profilePic: "",
+    oldPassword: "",
+    newPassword: "",
   });
 
   const [showPassword, setShowPassword] = useState(false);
 
-  const [error, setError] = useState();
-  const [success, setSuccess] = useState();
+  const [error, setError] = useState("");
+  const [success, setSuccess] = useState("");
 
   //Handlechange
   function handleChange({ currentTarget: input }) {
@@ -22,30 +25,26 @@ export function ChangePassword({ gardToken, gardener }) {
   }
 
   //axois request
-  const navigate = useNavigate();
   const handleSubmit = async (e) => {
     e.preventDefault();
-    try {
-      const url = "http://localhost:8080/admin/login";
-      const { data: res } = await axios.post(url, data);
-      console.log(res.message);
-      navigate("/admin");
-      //   giveAdminToken(res.data);
-      //   giveAdmin(res.admin);
-    } catch (error) {
-      if (
-        (error.response && error.response.status >= 400) ||
-        error.response.status <= 500
-      ) {
-        setError(error.response.data.message);
-      }
-    }
+    axios
+      .patch("http://localhost:8080/gardener/changePassword", data, {
+        headers: {
+          Authorization: `Bearer ${gardToken}`,
+        },
+      })
+      .then(function (res) {
+        setError(null);
+        setSuccess(res.data.message);
+        refreshGardener();
+      })
+      .catch((e) => setError(e.response.data.message));
   };
 
   return (
     <div>
       {gardToken ? (
-        <form className="form-container">
+        <form className="form-container" onSubmit={handleSubmit}>
           <h3>Change Username or password</h3>
           <br />
           <div class="form-group">
@@ -64,18 +63,65 @@ export function ChangePassword({ gardToken, gardener }) {
           <br />
 
           <div class="form-group">
+            <label for="image">Image Link (optional)</label>
+            <input
+              type="url"
+              class="form-control"
+              id="Image"
+              placeholder="paste image link here..."
+              value={data.profilePic}
+              onChange={handleChange}
+              name="profilePic"
+            />
+          </div>
+          <br />
+
+          <div class="form-group">
+            <label for="phoneNumber">Contact Number</label>
+            <input
+              type="number"
+              class="form-control"
+              id="phoneNumber"
+              placeholder="03**-*******"
+              value={data.phoneNo}
+              onChange={handleChange}
+              required
+              name="phoneNo"
+              maxLength={11}
+            />
+          </div>
+          <br />
+
+          <div class="form-group">
+            <label for="exampleInputPassword2">Old Password</label>
+            <input
+              type={showPassword ? "text" : "password"}
+              class="form-control"
+              id="exampleInputPassword2"
+              placeholder="Old Password"
+              value={data.oldPassword}
+              onChange={handleChange}
+              required
+              name="oldPassword"
+            />
+          </div>
+          <br />
+
+          <div class="form-group">
             <label for="exampleInputPassword1">New Password</label>
             <input
               type={showPassword ? "text" : "password"}
               class="form-control"
               id="exampleInputPassword1"
-              placeholder="Password"
-              value={data.password}
+              placeholder="New Password"
+              value={data.newPassword}
               onChange={handleChange}
               required
-              name="password"
+              name="newPassword"
             />
           </div>
+          <br />
+
           <div class="form-check form-check-inline">
             <input
               class="form-check-input"

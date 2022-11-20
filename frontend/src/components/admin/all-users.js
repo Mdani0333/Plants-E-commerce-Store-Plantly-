@@ -10,9 +10,15 @@ export function AllUsers({ admin, adminToken }) {
   const [users, setUsers] = useState([]);
 
   function getAllusers() {
-    axios.get("http://localhost:8080/user/all-users").then(function (res) {
-      setUsers(res.data);
-    });
+    axios
+      .get("http://localhost:8080/user/all-users", {
+        headers: {
+          Authorization: `Bearer ${adminToken}`,
+        },
+      })
+      .then(function (res) {
+        setUsers(res.data);
+      });
   }
 
   useEffect(() => {
@@ -20,11 +26,13 @@ export function AllUsers({ admin, adminToken }) {
   }, []);
 
   function remove(_id) {
-    console.log(_id);
     axios
-      .delete(`http://localhost:8080/user/delete/${_id}`)
+      .delete(`http://localhost:8080/user/delete/${_id}`, {
+        headers: {
+          Authorization: `Bearer ${adminToken}`,
+        },
+      })
       .then(function (res) {
-        console.log(res.data);
         getAllusers();
       });
   }

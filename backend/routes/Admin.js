@@ -32,7 +32,7 @@ router.post("/login", async (req, res) => {
     if (req.body.email) {
       const admin = await Admin.findOne({ email: req.body.email });
       if (!admin)
-        return res.status(401).send({ message: "invalid Email or Password" });
+        return res.status(401).send({ message: "invalid Email" });
 
       if (req.body.password) {
         const validPassword = await bcrypt.compare(
@@ -40,7 +40,7 @@ router.post("/login", async (req, res) => {
           admin.password
         );
         if (!validPassword)
-          return res.status(401).send({ message: "invalid email or password" });
+          return res.status(401).send({ message: "invalid password" });
 
         const adminToken = jwt.sign(
           { adminId: admin._id, tokenType: "ADMIN" },

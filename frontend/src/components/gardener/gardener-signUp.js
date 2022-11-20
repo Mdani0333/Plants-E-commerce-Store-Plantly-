@@ -8,6 +8,8 @@ export function GardenerSignUp() {
   const [data, setData] = useState({
     name: "",
     email: "",
+    phoneNo: null,
+    profilePic: "",
     password: "",
     resume: [],
   });
@@ -23,7 +25,7 @@ export function GardenerSignUp() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const url = "http://localhost:8080/gardener";
+      const url = "http://localhost:8080/gardener/signUp";
       const { data: res } = await axios.post(url, data);
       console.log(res.message);
       navigate("/gardener-login");
@@ -58,6 +60,20 @@ export function GardenerSignUp() {
         <br />
 
         <div class="form-group">
+          <label for="image">Image Link (optional)</label>
+          <input
+            type="url"
+            class="form-control"
+            id="Image"
+            placeholder="paste image link here..."
+            value={data.profilePic}
+            onChange={handleChange}
+            name="profilePic"
+          />
+        </div>
+        <br />
+
+        <div class="form-group">
           <label for="exampleInputEmail1">Email address</label>
           <input
             type="email"
@@ -69,6 +85,22 @@ export function GardenerSignUp() {
             onChange={handleChange}
             required
             name="email"
+          />
+        </div>
+        <br />
+
+        <div class="form-group">
+          <label for="phoneNumber">Contact Number</label>
+          <input
+            type="number"
+            class="form-control"
+            id="phoneNumber"
+            placeholder="03**-*******"
+            value={data.phoneNo}
+            onChange={handleChange}
+            required
+            name="phoneNo"
+            maxLength={11}
           />
         </div>
         <br />

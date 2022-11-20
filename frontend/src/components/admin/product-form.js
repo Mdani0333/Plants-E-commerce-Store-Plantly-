@@ -49,7 +49,11 @@ export function Addproduct({ admin, adminToken }) {
     e.preventDefault();
     try {
       const url = "http://localhost:8080/products/post";
-      const { data: res } = await axios.post(url, data);
+      const { data: res } = await axios.post(url, data, {
+        headers: {
+          Authorization: `Bearer ${adminToken}`,
+        },
+      });
       setSuccess(res.message);
     } catch (error) {
       if (
@@ -354,7 +358,6 @@ export function Addproduct({ admin, adminToken }) {
             {success && <div className="greenSpan">{success}</div>}
             <br />
             <br />
-
           </form>
         </div>
       ) : (

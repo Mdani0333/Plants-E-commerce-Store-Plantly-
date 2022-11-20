@@ -8,9 +8,6 @@ import NotFound from "../Pages/NotFound";
 export function ProfileCompletion({ gardener, gardToken }) {
   const [next, setNext] = useState(false);
   //States
-  const [exp, setExp] = useState([]);
-  console.log(exp);
-
   const [fromDate, onFromDate] = useState(new Date());
   const [toDate, onToDate] = useState(new Date());
 
@@ -24,10 +21,7 @@ export function ProfileCompletion({ gardener, gardToken }) {
 
   const [data, setData] = useState({
     status: "Un-Employed",
-    image: "",
-    name: "",
     address: "",
-    contactNo: 0,
     summary: "",
     experience: [],
     education: "",
@@ -51,16 +45,19 @@ export function ProfileCompletion({ gardener, gardToken }) {
   //add experience\
   function add(e) {
     e.preventDefault();
-    setExp([...exp, experience]);
+    setData({ ...data, experience: [...data.experience, experience] });
   }
 
   //axois request
   const navigate = useNavigate();
   const handleSubmit = async () => {
-    setData({ ...data, experience: exp });
     try {
-      const url = `http://localhost:8080/gardener/update/${gardener._id}`;
-      const { data: res } = await axios.patch(url, data);
+      const url = "http://localhost:8080/gardener/update";
+      const { data: res } = await axios.patch(url, data, {
+        headers: {
+          Authorization: `Bearer ${gardToken}`,
+        },
+      });
       setSuccess(res.message);
       navigate("/profile");
     } catch (error) {
@@ -75,40 +72,26 @@ export function ProfileCompletion({ gardener, gardToken }) {
 
   return (
     <div>
-      {gardToken && Object.keys(gardener.resume).length === 0 ? (
+      {gardToken ? (
         <div>
           {!next && (
             <form className="form-container" onSubmit={() => setNext(true)}>
-              <h3>Fill the form below to complete your profile</h3>
-              <br />
-              <div class="form-group">
-                <label for="image">Image Link (optional)</label>
-                <input
-                  type="url"
-                  class="form-control"
-                  id="Image"
-                  placeholder="paste image link here..."
-                  value={data.image}
-                  onChange={handleChange}
-                  name="image"
-                />
-              </div>
+              <h3>Fill the form below to complete/Update your profile</h3>
               <br />
 
-              <div class="form-group">
-                <label for="name">FullName</label>
-                <input
-                  type="text"
-                  class="form-control"
-                  id="name"
-                  placeholder="Enter name"
-                  value={data.name}
+              <div class="s-input">
+                <label class="mr-sm-2" for="inlineFormCustomSelect">
+                  Status
+                </label>
+                <select
+                  class="custom-select mr-sm-2"
+                  id="inlineFormCustomSelect"
                   onChange={handleChange}
-                  required
-                  name="name"
-                />
+                >
+                  <option value="Un-Employed">Un-Employed</option>
+                  <option value="hired">Hired</option>
+                </select>
               </div>
-              <br />
 
               <div class="form-group">
                 <label for="address">Address</label>
@@ -121,22 +104,6 @@ export function ProfileCompletion({ gardener, gardToken }) {
                   onChange={handleChange}
                   required
                   name="address"
-                />
-              </div>
-              <br />
-
-              <div class="form-group">
-                <label for="contact">Contact NO</label>
-                <input
-                  type="number"
-                  class="form-control"
-                  id="contact"
-                  placeholder="contact no"
-                  value={data.contactNo}
-                  onChange={handleChange}
-                  required
-                  name="contactNo"
-                  maxLength="11"
                 />
               </div>
               <br />
@@ -220,11 +187,11 @@ export function ProfileCompletion({ gardener, gardToken }) {
           {next && (
             <div className="form-container">
               <div>
-                {exp.length === 0 ? (
+                {data.experience.length === 0 ? (
                   <div className="display-none"></div>
                 ) : (
                   <div>
-                    {exp.map((item, index) => {
+                    {data.experience.map((item, index) => {
                       return (
                         <div key={index} className="exp-container">
                           <h3>Experience {index + 1}</h3>

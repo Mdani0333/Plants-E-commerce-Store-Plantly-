@@ -9,14 +9,15 @@ import NotFound from "../Pages/NotFound";
 
 export function AllProducts({ admin, adminToken, getProducts }) {
   const products = useContext(ProductsContext);
-  const navigate = useNavigate();
 
   function remove(_id) {
-    console.log(_id);
     axios
-      .delete(`http://localhost:8080/products/delete/${_id}`)
+      .delete(`http://localhost:8080/products/delete/${_id}`, {
+        headers: {
+          Authorization: `Bearer ${adminToken}`,
+        },
+      })
       .then(function (res) {
-        console.log(res.data);
         getProducts();
       });
   }

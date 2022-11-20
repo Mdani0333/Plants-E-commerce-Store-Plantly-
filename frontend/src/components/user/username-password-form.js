@@ -35,16 +35,17 @@ export function ChangePasswordUser({ token, refreshUser }) {
         },
       })
       .then(function (res) {
+        setError(null);
         setSuccess(res.data.message);
         refreshUser();
       })
-      .catch((e) => setError(e.message));
+      .catch((e) => setError(e.response.data.message));
   };
 
   return (
     <div>
       {token ? (
-        <form className="form-container" action={() => handleSubmit()}>
+        <form className="form-container" onSubmit={handleSubmit}>
           <h3>Change Username or password</h3>
           <br />
           <div class="form-group">

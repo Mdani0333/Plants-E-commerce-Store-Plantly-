@@ -10,9 +10,11 @@ export function AllGardeners({ admin, adminToken }) {
   const [gardeners, setGardeners] = useState([]);
 
   function getAllgardeners() {
-    axios.get("http://localhost:8080/gardener/all-gardeners").then(function (res) {
-      setGardeners(res.data);
-    });
+    axios
+      .get("http://localhost:8080/gardener/all-gardeners")
+      .then(function (res) {
+        setGardeners(res.data);
+      });
   }
 
   useEffect(() => {
@@ -20,11 +22,13 @@ export function AllGardeners({ admin, adminToken }) {
   }, []);
 
   function remove(_id) {
-    console.log(_id);
     axios
-      .delete(`http://localhost:8080/gardener/delete/${_id}`)
+      .delete(`http://localhost:8080/gardener/delete/${_id}`, {
+        headers: {
+          Authorization: `Bearer ${adminToken}`,
+        },
+      })
       .then(function (res) {
-        console.log(res.data);
         getAllgardeners();
       });
   }

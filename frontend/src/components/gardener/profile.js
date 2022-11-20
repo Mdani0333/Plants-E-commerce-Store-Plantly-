@@ -17,9 +17,9 @@ export function Profile({
   giveGard,
   giveGardToken,
 }) {
-  useEffect(() => {
-    refreshGardener();
-  }, []);
+  // useEffect(() => {
+  //   refreshGardener();
+  // }, []);
 
   //cookie
   const [cookies, setCookie] = useCookies(["GardToken"]);
@@ -27,9 +27,9 @@ export function Profile({
   const navigate = useNavigate();
 
   //states
-  const [status, setStatus] = useState("");
-  console.log(status);
+  const [status, setStatus] = useState("Hired");
 
+  //logout function
   function Logout() {
     setCookie("GardToken", "", { path: "/" });
     giveGardToken("");
@@ -38,22 +38,68 @@ export function Profile({
     navigate("/");
   }
 
+  //status change reqeust
+  const ChangeStatus = async (e) => {
+    e.preventDefault();
+    try {
+      const url = "http://localhost:8080/gardener/status";
+      await axios
+        .patch(
+          url,
+          { status: status },
+          {
+            headers: {
+              Authorization: `Bearer ${gardToken}`,
+            },
+          }
+        )
+        .then((res) => {
+          refreshGardener();
+        });
+    } catch (error) {
+      console.log(error.message);
+    }
+  };
+
+  //delete resume function
+  async function DeleteResume(id) {
+    try {
+      const url = "http://localhost:8080/gardener/delete/resume";
+      await axios
+        .patch(
+          url,
+          { id: id },
+          {
+            headers: {
+              Authorization: `Bearer ${gardToken}`,
+            },
+          }
+        )
+        .then((res) => {
+          refreshGardener();
+        });
+    } catch (error) {
+      console.log(error.message);
+    }
+  }
+
   return (
     <div>
       {gardToken ? (
         <div className="profile-container">
           <div className="profile-div">
             <div className="row-flex">
-              {gardener.resume[0].image && (
-                <img src={gardener.resume[0].image} className="p-img" />
-              )}
+              <img src={gardener.profilePic} className="p-img" />
               <div className="col-flex">
                 <div className="status-row">
                   <h1>{gardener.name}</h1>
-                  {gardener.resume[0].status && (
+                  {Object.keys(gardener.resume).length === 0 ? (
+                    <></>
+                  ) : (
                     <span
                       className={
-                        gardener.resume[0].status == "Un-Employed"
+                        gardener.resume[0].status == "Un-Employed" ||
+                        gardener.resume[0].status == "Not-available"
                           ? "redSpan"
                           : "greenSpan"
                       }
@@ -66,12 +112,10 @@ export function Profile({
                   <MdEmail className="p-icons" />
                   {gardener.email}
                 </p>
-                {gardener.resume[0].contactNo && (
-                  <p>
-                    <MdPhone className="p-icons" />
-                    {gardener.resume[0].contactNo}
-                  </p>
-                )}
+                <p>
+                  <MdPhone className="p-icons" />
+                  {gardener.phoneNo}
+                </p>
               </div>
             </div>
 
@@ -86,20 +130,20 @@ export function Profile({
                 <div className="resume">
                   <span className="edit-delete-option">
                     <FaDownload className="download-icon" />
-                    <Link
-                      to={`/gardener/edit-resume/${gardener._id}`}
-                      className="link"
-                    >
+                    <Link to={"/profile-completion"} className="link">
                       <FiEdit className="edit-btn" />
                     </Link>
-                    <MdDeleteForever className="remove-btn" />
+                    <MdDeleteForever
+                      className="remove-btn"
+                      onClick={() => DeleteResume(gardener.resume[0]._id)}
+                    />
                   </span>
-                  <span className="points">{gardener.resume[0].name}</span>
+                  <span className="points">{gardener.name}</span>
                   <br />
                   <span className="points">{gardener.resume[0].address}</span>
                   <br />
                   <span className="points">
-                    E: {gardener.email} T: {gardener.resume[0].contactNo}
+                    E: {gardener.email} T: {gardener.phoneNo}
                   </span>
                   <br />
                   <br />
@@ -108,7 +152,7 @@ export function Profile({
                   <br />
                   <p className="points">Work Experience :</p>
                   {Object.keys(gardener.resume[0].experience).length === 0 ? (
-                    <div className="display-none"></div>
+                    <p>No work Experience</p>
                   ) : (
                     <div>
                       {gardener.resume[0].experience.map((item, index) => {
@@ -145,6 +189,9 @@ export function Profile({
                   <p className="points">Education and Training</p>
                   <p>{gardener.resume[0].education}</p>
 
+                  <p className="points">Skills</p>
+                  <p>{gardener.resume[0].skills}</p>
+
                   <br />
                   <p className="points">hobbies and Interests</p>
                   <p>{gardener.resume[0].hobbies}</p>
@@ -153,7 +200,7 @@ export function Profile({
             )}
 
             <div className="change-status">
-              <form>
+              <form onSubmit={ChangeStatus}>
                 <div class="form-row">
                   <div class="s-input">
                     <label class="mr-sm-2" for="inlineFormCustomSelect">
@@ -164,9 +211,9 @@ export function Profile({
                       id="inlineFormCustomSelect"
                       onChange={(e) => setStatus(e.target.value)}
                     >
-                      <option value="hired">Hired</option>
+                      <option value="Hired">Hired</option>
                       <option value="Un-Employed">Un-Employed</option>
-                      <option value="not-available">Not available now</option>
+                      <option value="Not-available">Not available now</option>
                     </select>
                   </div>
                   <div class="col-auto my-1">

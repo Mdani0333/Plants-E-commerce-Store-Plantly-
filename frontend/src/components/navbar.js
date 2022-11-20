@@ -73,21 +73,33 @@ export default function Navbar({ token, adminToken, gardToken, gardener }) {
           )}
         </div>
         <div id="flx">
-          {Object.keys(gardener).length === 0 ? (
-            <div>
-              <Link to="/my/favourites">
-                <BiHeart className="icons" />
-              </Link>
-              <Link to="/my/cart">
-                <BiShoppingBag className="icons" />
+          {adminToken ? (
+            <Link to="/admin" className="links">
+              Menu
+            </Link>
+          ) : (
+            <div id="flx">
+              {Object.keys(gardener).length === 0 ? (
+                <div>
+                  <Link to="/my/favourites">
+                    <BiHeart className="icons" />
+                  </Link>
+                  <Link to="/my/cart">
+                    <BiShoppingBag className="icons" />
+                  </Link>
+                </div>
+              ) : (
+                <div className="display-none"></div>
+              )}
+              <Link
+                to={
+                  token ? "/account" : gardToken ? "/profile" : "/NotSignedIn"
+                }
+              >
+                <BiUser className="icons" />
               </Link>
             </div>
-          ) : (
-            <div className="display-none"></div>
           )}
-          <Link to={token ? "/account" : "/profile"}>
-            <BiUser className="icons" />
-          </Link>
           {token ? (
             <span className="greenSpan">{user.name}</span>
           ) : adminToken ? (

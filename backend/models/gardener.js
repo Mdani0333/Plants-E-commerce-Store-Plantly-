@@ -1,5 +1,4 @@
 const mongoose = require("mongoose");
-const jwt = require("jsonwebtoken");
 const passwordComplexity = require("joi-password-complexity");
 const Joi = require("joi");
 
@@ -13,10 +12,7 @@ const experienceSchema = new mongoose.Schema({
 
 const resumeSchema = new mongoose.Schema({
   status: { type: String, required: true },
-  image: { type: String, required: true },
-  name: { type: String, required: true },
   address: { type: String, required: true },
-  contactNo: { type: Number, required: true },
   summary: { type: String, required: true },
   experience: [experienceSchema],
   education: { type: String, required: true },
@@ -27,6 +23,8 @@ const resumeSchema = new mongoose.Schema({
 const gardenerSchema = new mongoose.Schema({
   name: { type: String, required: true },
   email: { type: String, required: true },
+  phoneNo: { type: Number, required: true },
+  profilePic: { type: String, required: true },
   password: { type: String, required: true },
   resume: [resumeSchema],
 });
@@ -37,6 +35,8 @@ const validate = (data) => {
   const schema = Joi.object({
     name: Joi.string().required().label("name"),
     email: Joi.string().email().required().label("email"),
+    phoneNo: Joi.number().required().label("phoneNo"),
+    profilePic: Joi.string().required().label("profilePic"),
     password: passwordComplexity().required().label("password"),
     resume: Joi.array(),
   });

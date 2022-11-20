@@ -7,21 +7,7 @@ import { MdEmail } from "react-icons/md";
 import { MdPhone } from "react-icons/md";
 import { Link } from "react-router-dom";
 
-export function HireGard({ token, adminToken, gardToken }) {
-  const [gardeners, setGardeners] = useState([]);
-
-  function getAllgardeners() {
-    axios
-      .get("http://localhost:8080/gardener/all-gardeners")
-      .then(function (res) {
-        setGardeners(res.data);
-      });
-  }
-
-  useEffect(() => {
-    getAllgardeners();
-  }, []);
-
+export function HireGard({ token, adminToken, gardToken, gardeners }) {
   return (
     <div>
       {token || adminToken || gardToken ? (
@@ -30,9 +16,7 @@ export function HireGard({ token, adminToken, gardToken }) {
             return (
               <div key={index} className="profile-card">
                 <div className="profile-info">
-                  {value.resume[0].image && (
-                    <img src={value.resume[0].image} className="hire-img" />
-                  )}
+                  <img src={value.profilePic} className="hire-img" />
                   <div className="col-flex">
                     <div className="status-name-row">
                       <h1>{value.name}</h1>
@@ -41,13 +25,13 @@ export function HireGard({ token, adminToken, gardToken }) {
                       <MdEmail className="p-icons" />
                       {value.email}
                     </p>
-                    {value.resume[0].contactNo && (
-                      <p>
-                        <MdPhone className="p-icons" />
-                        {value.resume[0].contactNo}
-                      </p>
-                    )}
-                    {value.resume[0].status && (
+                    <p>
+                      <MdPhone className="p-icons" />
+                      {value.phoneNo}
+                    </p>
+                    {Object.keys(value.resume).length === 0 ? (
+                      <></>
+                    ) : (
                       <span
                         className={
                           value.resume[0].status == "Un-Employed"

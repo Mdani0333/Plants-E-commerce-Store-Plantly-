@@ -7,8 +7,6 @@ import NotFound from "../Pages/NotFound";
 import { ProductsContext } from "../../context-hooks/ProductsContext";
 
 export function UpdateForm({ admin, adminToken }) {
-  console.log(adminToken);
-
   const { id } = useParams();
   const products = useContext(ProductsContext);
 
@@ -63,9 +61,11 @@ export function UpdateForm({ admin, adminToken }) {
     e.preventDefault();
     try {
       const url = `http://localhost:8080/products/update/${id}`;
-      const { data: res } = await axios.put(url, data);
-      console.log(data)
-      console.log(res.message)
+      const { data: res } = await axios.put(url, data, {
+        headers: {
+          Authorization: `Bearer ${adminToken}`,
+        },
+      });
       setSuccess(res.message);
     } catch (error) {
       if (
@@ -368,8 +368,8 @@ export function UpdateForm({ admin, adminToken }) {
 
             {error && <div className="redSpan">{error}</div>}
             {success && <div className="greenSpan">{success}</div>}
-            <br/>
-            <br/>
+            <br />
+            <br />
           </form>
         </div>
       ) : (

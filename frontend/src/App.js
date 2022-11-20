@@ -46,6 +46,8 @@ function App() {
 
   //products
   const [products, setProducts] = useState([]);
+  //gardeners
+  const [gardeners, setGardeners] = useState([]);
 
   //user
   const [token, setToken] = useState(cookies.UserToken || "");
@@ -70,6 +72,7 @@ function App() {
       })
       .then(function (res) {
         setUser(res.data);
+        localStorage.setItem("User", JSON.stringify(res.data));
       });
   }
 
@@ -80,6 +83,7 @@ function App() {
       ? JSON.parse(localStorage.getItem("Gardener"))
       : {}
   );
+  console.log(gardener);
   function giveGardToken(data) {
     setGardToken(data);
   }
@@ -96,6 +100,7 @@ function App() {
       })
       .then(function (res) {
         setGardener(res.data);
+        localStorage.setItem("Gardener", JSON.stringify(res.data));
       });
   }
 
@@ -129,15 +134,23 @@ function App() {
       setPage(true);
     });
   }
+  //getting all gardeners
+  function getAllgardeners() {
+    axios
+      .get("http://localhost:8080/gardener/all-gardeners")
+      .then(function (res) {
+        setGardeners(res.data);
+      });
+  }
 
   //getting only on start
   useEffect(() => {
     getProducts();
+    getAllgardeners();
   }, []);
 
   //Adding to cart
   function addToCart(item) {
-    console.log(item);
     axios
       .patch(
         "http://localhost:8080/user/cart",
@@ -182,7 +195,6 @@ function App() {
 
   //Adding to favourites
   function addToFav(item) {
-    console.log(item);
     axios
       .patch(
         "http://localhost:8080/user/fav",
@@ -268,6 +280,7 @@ function App() {
                         token={token}
                         adminToken={adminToken}
                         gardToken={gardToken}
+                        gardeners={gardeners}
                       />
                     }
                   />
@@ -279,6 +292,7 @@ function App() {
                         token={token}
                         adminToken={adminToken}
                         gardToken={gardToken}
+                        gardeners={gardeners}
                       />
                     }
                   />
@@ -366,6 +380,7 @@ function App() {
                       <ChangePassword
                         gardener={gardener}
                         gardToken={gardToken}
+                        refreshGardener={refreshGardener}
                       />
                     }
                   />

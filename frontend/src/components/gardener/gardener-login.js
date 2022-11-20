@@ -29,17 +29,15 @@ export function GardenerLogin({ giveGardToken, giveGard, gardener }) {
     try {
       const url = "http://localhost:8080/gardener/login";
       const { data: res } = await axios.post(url, data);
-      // console.log(res.message);
+      
       setCookie("GardToken", res.Token, { path: "/" });
       giveGardToken(res.Token);
 
       localStorage.setItem("Gardener", JSON.stringify(res.Gardener));
       giveGard(res.Gardener);
-      // console.log(res.Gardener);
-      
       navigate("/profile");
     } catch (error) {
-      setError(error.message);
+      setError(error.response.data.message);
     }
   };
 
