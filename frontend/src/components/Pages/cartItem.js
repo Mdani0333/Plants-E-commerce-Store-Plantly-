@@ -1,17 +1,49 @@
 import "./cartView.css";
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
 import { FiPlus, FiMinus } from "react-icons/fi";
 import { GiCancel } from "react-icons/gi";
+import axios from "axios";
 
-export function CartItem({ removeFromCart, item }) {
-  const [quantity, setQuantity] = useState(1);
-
-  function incQuantity() {
-    setQuantity(quantity + 1);
+export function CartItem({ removeFromCart, item, token, giveUser }) {
+  //quantity increment
+  function incQuantity(id) {
+    axios
+      .patch(
+        "http://localhost:8080/user/cart/quantity",
+        {
+          method: "INC",
+          id: id,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      )
+      .then((res) => {
+        giveUser(res.data);
+        localStorage.setItem("User", JSON.stringify(res.data));
+      });
   }
-  function decQuantity() {
-    setQuantity(quantity - 1);
+
+  function decQuantity(id) {
+    axios
+      .patch(
+        "http://localhost:8080/user/cart/quantity",
+        {
+          method: "DEC",
+          id: id,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      )
+      .then((res) => {
+        giveUser(res.data);
+        localStorage.setItem("User", JSON.stringify(res.data));
+      });
   }
 
   return (
@@ -26,15 +58,14 @@ export function CartItem({ removeFromCart, item }) {
       <span className="qty-div">
         <input
           type="number"
-          value={quantity}
-          onChange={(e) => e.target.quantity}
+          value={item.quantity}
           className="quantity-input-field"
         />
         <span>
           <button
             onClick={
-              quantity > 1
-                ? () => decQuantity()
+              item.quantity > 1
+                ? () => decQuantity(item._id)
                 : console.log("instock outreached")
             }
             className="qty-btn"
@@ -43,8 +74,8 @@ export function CartItem({ removeFromCart, item }) {
           </button>
           <button
             onClick={
-              quantity < item.instock
-                ? () => incQuantity()
+              item.quantity < item.instock
+                ? () => incQuantity(item._id)
                 : console.log("instock reached")
             }
             className="qty-btn"

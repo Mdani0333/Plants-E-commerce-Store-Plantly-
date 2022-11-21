@@ -21,6 +21,7 @@ const cartSchema = new mongoose.Schema({
   image: { type: String, required: true },
   price: { type: Number, required: true },
   instock: { type: Number, required: true },
+  quantity: { type: Number, required: true },
   description: { type: String, required: true },
   temprature: { type: String, required: true },
   humidity: { type: Number, required: true },
@@ -56,7 +57,14 @@ const paymentDetails = new mongoose.Schema({
 });
 
 const shoppingHistory = new mongoose.mongoose.Schema({
-  orderNumber: { type: Number, required: true },
+  status: { type: String, required: true },
+  address: { type: String, required: true },
+  zipCode: { type: Number, required: true },
+  phoneNo: { type: Number, required: true },
+  note: { type: String, required: true },
+  paymentType: { type: String, required: true },
+  products: [cartSchema],
+  total: { type: Number, required: true },
 });
 
 const userSchema = new mongoose.Schema({

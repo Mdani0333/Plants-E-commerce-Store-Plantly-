@@ -30,14 +30,14 @@ export function Login({ giveToken, giveUser }) {
     try {
       const url = "http://localhost:8080/user/login";
       const { data: res } = await axios.post(url, data);
-      // console.log(res.message);
+
       setCookie("UserToken", res.Token, { path: "/" });
       giveToken(res.Token);
 
       localStorage.setItem("User", JSON.stringify(res.User));
       giveUser(res.User);
 
-      navigate("/");
+      navigate("/shop");
     } catch (error) {
       setError(error.response.data.message);
     }

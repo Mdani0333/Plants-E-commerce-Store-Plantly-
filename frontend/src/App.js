@@ -36,6 +36,7 @@ import { VisitProfile } from "./components/hire-gardener/visit-profile";
 import { LandingPage } from "./components/landing-page";
 import Footer from "./components/footer";
 import { useCookies } from "react-cookie";
+import { Checkout } from "./components/Pages/checkout";
 
 function App() {
   //cookie
@@ -51,7 +52,6 @@ function App() {
 
   //user
   const [token, setToken] = useState(cookies.UserToken || "");
-  // console.log(token);
   const [user, setUser] = useState(
     localStorage.getItem("User") ? JSON.parse(localStorage.getItem("User")) : {}
   );
@@ -75,6 +75,24 @@ function App() {
         localStorage.setItem("User", JSON.stringify(res.data));
       });
   }
+  //User Cart Total
+  const [cartTotal, setCartTotal] = useState(null);
+
+  //calculate cart total function
+  const total = () => {
+    let totalVal = 0;
+    for (let i = 0; i < user.cart.length; i++) {
+      totalVal += user.cart[i].price * user.cart[i].quantity;
+    }
+    setCartTotal(totalVal);
+  };
+
+  //calculating total whenever user is changed
+  useEffect(() => {
+    if (token) {
+      total();
+    }
+  }, [user]);
 
   //gardener
   const [gardToken, setGardToken] = useState(cookies.GardToken || "");
@@ -151,24 +169,30 @@ function App() {
 
   //Adding to cart
   function addToCart(item) {
-    axios
-      .patch(
-        "http://localhost:8080/user/cart",
-        {
-          method: "PUSH",
-          product: item,
-        },
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
+    var ok = user.cart.filter((f) => f._id == item._id);
+    if (Object.keys(ok).length === 0) {
+      axios
+        .patch(
+          "http://localhost:8080/user/cart",
+          {
+            method: "PUSH",
+            product: item,
           },
-        }
-      )
-      .then(function (res) {
-        console.log(res.data.message);
-        refreshUser();
-      })
-      .catch((e) => console.log(e));
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        )
+        .then(function (res) {
+          console.log(res.data.message);
+          setUser(res.data.user);
+          localStorage.setItem("User", JSON.stringify(res.data.user));
+        })
+        .catch((e) => console.log(e));
+    } else {
+      alert("already in cart!");
+    }
   }
 
   //Removing from cart
@@ -188,31 +212,38 @@ function App() {
       )
       .then(function (res) {
         console.log(res.data.message);
-        refreshUser();
+        setUser(res.data.user);
+        localStorage.setItem("User", JSON.stringify(res.data.user));
       })
       .catch((e) => console.log(e));
   }
 
   //Adding to favourites
   function addToFav(item) {
-    axios
-      .patch(
-        "http://localhost:8080/user/fav",
-        {
-          method: "PUSH",
-          product: item,
-        },
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
+    var ok = user.favourites.filter((f) => f._id == item._id);
+    if (Object.keys(ok).length === 0) {
+      axios
+        .patch(
+          "http://localhost:8080/user/fav",
+          {
+            method: "PUSH",
+            product: item,
           },
-        }
-      )
-      .then(function (res) {
-        console.log(res.data.message);
-        refreshUser();
-      })
-      .catch((e) => console.log(e));
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        )
+        .then(function (res) {
+          console.log(res.data.message);
+          setUser(res.data.user);
+          localStorage.setItem("User", JSON.stringify(res.data.user));
+        })
+        .catch((e) => console.log(e));
+    } else {
+      alert("already in favourites!");
+    }
   }
 
   //Removing from fav
@@ -232,7 +263,8 @@ function App() {
       )
       .then(function (res) {
         console.log(res.data.message);
-        refreshUser();
+        setUser(res.data.user);
+        localStorage.setItem("User", JSON.stringify(res.data.user));
       })
       .catch((e) => console.log(e));
   }
@@ -244,6 +276,12 @@ function App() {
     "pot-standee",
     "agricultural",
   ]);
+
+  const [success, setSuccess] = useState("");
+
+  function giveSuccess(value) {
+    setSuccess(value);
+  }
 
   return (
     <div className="App-div">
@@ -304,7 +342,26 @@ function App() {
                   <Route
                     exact
                     path="/my/cart"
-                    element={<CartView removeFromCart={removeFromCart} />}
+                    element={
+                      <CartView
+                        removeFromCart={removeFromCart}
+                        token={token}
+                        giveUser={giveUser}
+                        cartTotal={cartTotal}
+                      />
+                    }
+                  />
+                  <Route
+                    exact
+                    path="/my/checkout"
+                    element={
+                      <Checkout
+                        cartTotal={cartTotal}
+                        token={token}
+                        getProducts={getProducts}
+                        giveUser={giveUser}
+                      />
+                    }
                   />
                   <Route
                     exact

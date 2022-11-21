@@ -1,5 +1,6 @@
 const router = require("express").Router();
 const { User, validate } = require("../models/user");
+const Products = require("../models/product");
 const bcrypt = require("bcrypt");
 const { VerifyUserToken, VerifyAdminToken } = require("../jwt/Auth");
 const jwt = require("jsonwebtoken");
@@ -98,17 +99,20 @@ router.delete("/delete/:id", VerifyAdminToken, async (req, res) => {
 router.patch("/cart", VerifyUserToken, async (req, res) => {
   try {
     if (req.body.method == "PUSH") {
+      req.body.product.quantity = 1;
       await User.updateOne(
         { _id: req.headers.userId },
         { $push: { cart: req.body.product } }
       );
-      res.status(201).send({ message: "Added!" });
+      const user = await User.findById(req.headers.userId);
+      res.status(201).send({ user: user, message: "Added!" });
     } else if (req.body.method == "PULL") {
       await User.updateOne(
         { _id: req.headers.userId },
         { $pull: { cart: { _id: req.body.id } } }
       );
-      res.status(201).send({ message: "Removed!" });
+      const user = await User.findById(req.headers.userId);
+      res.status(201).send({ user: user, message: "Removed!" });
     }
   } catch (error) {
     res.status(500).send({ message: "Server Error" });
@@ -123,13 +127,15 @@ router.patch("/fav", VerifyUserToken, async (req, res) => {
         { _id: req.headers.userId },
         { $push: { favourites: req.body.product } }
       );
-      res.status(201).send({ message: "Added!" });
+      const user = await User.findById(req.headers.userId);
+      res.status(201).send({ user: user, message: "Added!" });
     } else if (req.body.method === "PULL") {
       await User.updateOne(
         { _id: req.headers.userId },
         { $pull: { favourites: { _id: req.body.id } } }
       );
-      res.status(201).send({ message: "Removed!" });
+      const user = await User.findById(req.headers.userId);
+      res.status(201).send({ user: user, message: "Removed!" });
     }
   } catch (error) {
     res.status(500).send({ message: "Server Error" });
@@ -166,6 +172,42 @@ router.patch("/changePassword", VerifyUserToken, async (req, res) => {
   } catch (error) {
     res.status(500).send({ message: "Server Error" });
   }
+});
+
+//increment or decrement quantity
+router.patch("/cart/quantity", VerifyUserToken, async (req, res) => {
+  if (req.body.method === "INC") {
+    await User.updateOne(
+      { _id: req.headers.userId, "cart._id": req.body.id },
+      { $inc: { "cart.$.quantity": 1 } }
+    );
+    const user = await User.findById(req.headers.userId);
+    res.status(201).send(user);
+  } else if (req.body.method === "DEC") {
+    await User.updateOne(
+      { _id: req.headers.userId, "cart._id": req.body.id },
+      { $inc: { "cart.$.quantity": -1 } }
+    );
+    const user = await User.findById(req.headers.userId);
+    res.status(201).send(user);
+  }
+});
+
+//Order placement
+router.patch("/order-placement", VerifyUserToken, async (req, res) => {
+  for (let i = 0; i < req.body.products.length; i++) {
+    await Products.updateOne(
+      { _id: req.body.products[i]._id },
+      { $inc: { instock: -req.body.products[i].quantity } }
+    );
+  }
+  await User.updateOne(
+    { _id: req.headers.userId },
+    { $push: { shoppingHistory: req.body } }
+  );
+  await User.updateOne({ _id: req.headers.userId }, { $set: { cart: [] } });
+  const user = await User.findById(req.headers.userId);
+  res.status(201).send({ user: user, message: "Your Order is Placed!" });
 });
 
 module.exports = router;

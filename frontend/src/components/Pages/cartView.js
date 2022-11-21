@@ -1,16 +1,14 @@
 import "./cartView.css";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { BiShoppingBag } from "react-icons/bi";
 import { UserContext } from "../../context-hooks/UserContext";
 import { useContext } from "react";
 import { CartItem } from "./cartItem";
 import NotSignedIn from "./NotSignedIn";
-import axios from "axios";
 
-export function CartView({ removeFromCart }) {
+export function CartView({ removeFromCart, token, giveUser, cartTotal }) {
   const user = useContext(UserContext);
-  const [total, setTotal] = useState(0);
 
   return (
     <div>
@@ -26,6 +24,8 @@ export function CartView({ removeFromCart }) {
           {user.cart.length != 0 ? (
             user.cart.map((item, index) => (
               <CartItem
+                token={token}
+                giveUser={giveUser}
                 removeFromCart={removeFromCart}
                 item={item}
                 key={index}
@@ -39,7 +39,7 @@ export function CartView({ removeFromCart }) {
           <br />
           <div className="total-amount-div">
             <h3>Total:</h3>
-            <h3>${total}</h3>
+            <h3>${cartTotal}</h3>
           </div>
           <br />
           <div>
