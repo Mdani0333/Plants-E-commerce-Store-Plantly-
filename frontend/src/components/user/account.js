@@ -7,7 +7,7 @@ import { MdEmail } from "react-icons/md";
 import "./account.css";
 import { useCookies } from "react-cookie";
 
-export function Account({ token, giveUser, giveToken }) {
+export function Account({ token, giveUser, giveToken, refreshUser }) {
   const user = useContext(UserContext);
 
   //cookie
@@ -22,6 +22,10 @@ export function Account({ token, giveUser, giveToken }) {
     giveUser({});
     navigate("/");
   }
+
+  useEffect(() => {
+    refreshUser();
+  }, []);
   return (
     <div>
       {token ? (

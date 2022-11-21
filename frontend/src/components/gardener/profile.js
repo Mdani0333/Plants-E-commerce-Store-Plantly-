@@ -17,9 +17,9 @@ export function Profile({
   giveGard,
   giveGardToken,
 }) {
-  // useEffect(() => {
-  //   refreshGardener();
-  // }, []);
+  useEffect(() => {
+    refreshGardener();
+  }, []);
 
   //cookie
   const [cookies, setCookie] = useCookies(["GardToken"]);

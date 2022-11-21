@@ -383,6 +383,7 @@ function App() {
                         token={token}
                         giveToken={giveToken}
                         giveUser={giveUser}
+                        refreshUser={refreshUser}
                       />
                     }
                   />

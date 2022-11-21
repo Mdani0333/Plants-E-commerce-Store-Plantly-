@@ -4,6 +4,8 @@ const Products = require("../models/product");
 const bcrypt = require("bcrypt");
 const { VerifyUserToken, VerifyAdminToken } = require("../jwt/Auth");
 const jwt = require("jsonwebtoken");
+var nodemailer = require("nodemailer");
+const { v4: uuidv4 } = require("uuid");
 
 //user signUp
 router.post("/signUp", async (req, res) => {
@@ -195,18 +197,87 @@ router.patch("/cart/quantity", VerifyUserToken, async (req, res) => {
 
 //Order placement
 router.patch("/order-placement", VerifyUserToken, async (req, res) => {
+  const orderNo = uuidv4();
+  req.body.orderNo = orderNo;
+  //decresing instock on basis of products quantity in cart
   for (let i = 0; i < req.body.products.length; i++) {
     await Products.updateOne(
       { _id: req.body.products[i]._id },
       { $inc: { instock: -req.body.products[i].quantity } }
     );
   }
+  //creating shopping history
   await User.updateOne(
     { _id: req.headers.userId },
     { $push: { shoppingHistory: req.body } }
   );
+  //setting cart to empty
   await User.updateOne({ _id: req.headers.userId }, { $set: { cart: [] } });
   const user = await User.findById(req.headers.userId);
+
+  const transporter = nodemailer.createTransport({
+    service: "gmail",
+    secureConnection: true,
+    auth: {
+      user: "adnanmanzoorfiverr@gmail.com",
+      pass: "ojgalpnjdadcusfp",
+    },
+  });
+
+  var arrayItems = "";
+  req.body.products.forEach((element) => {
+    arrayItems +=
+      "<p>" +
+      element.specie +
+      " " +
+      element.name +
+      " " +
+      element.price +
+      "*" +
+      element.quantity +
+      " " +
+      "</p>";
+  });
+
+  transporter.sendMail(
+    {
+      from: '"Plantly" <noReply@gmail.com>',
+      to: `adnanmanzoor1965@gmail.com, ${user.email}`,
+      subject: "#Order Info",
+      html: `<!DOCTYPE html>
+      <html>
+      <head>
+          <title>Order Info</title>
+      </head>
+      <body>
+          <h1>Your order was placed!</h1>
+          <h2>Here are some Details:</h2>
+          <h3>Order# ${orderNo}</h3>
+          <div>${arrayItems}</div>
+          <p><strong>Total:</strong> Rs${req.body.total}</p>
+          <h3>>Shipping details</h3>
+          <p><strong>Address:</strong> ${req.body.address}</p>
+          <p><strong>Zip-Code:</strong> ${req.body.zipCode}</p>
+          <p><strong>Contact Number:</strong> ${req.body.phoneNo}</p>
+          <p><strong>Note:</strong> ${req.body.note}</p>
+          <h3>>Payment details</h3>
+          <p><strong>Payment Type:</strong> ${req.body.paymentType}</p>
+          <p><strong>Current Status</strong> is "${req.body.status}"</p>
+         
+          <strong>Thank You!</strong>
+          <strong>Happy Shopping!</strong>
+      </body>
+      </html>`,
+    },
+    function (error, info) {
+      if (error) {
+        console.log(error);
+      } else {
+        console.log({ message: "Email Sent", Response: info.response });
+      }
+    }
+  );
+
   res.status(201).send({ user: user, message: "Your Order is Placed!" });
 });
 

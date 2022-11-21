@@ -57,6 +57,7 @@ const paymentDetails = new mongoose.Schema({
 });
 
 const shoppingHistory = new mongoose.mongoose.Schema({
+  orderNo: { type: String, required: true },
   status: { type: String, required: true },
   address: { type: String, required: true },
   zipCode: { type: Number, required: true },
