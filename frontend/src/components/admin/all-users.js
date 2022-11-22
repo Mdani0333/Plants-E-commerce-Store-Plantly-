@@ -1,25 +1,12 @@
 import "../Pages/cartView.css";
-import React, { useState, useContext, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { MdDeleteForever } from "react-icons/md";
-import { UserContext } from "../../context-hooks/UserContext";
 import axios from "axios";
 import NotFound from "../Pages/NotFound";
 
-export function AllUsers({ admin, adminToken }) {
-  const [users, setUsers] = useState([]);
-
-  function getAllusers() {
-    axios
-      .get("http://localhost:8080/user/all-users", {
-        headers: {
-          Authorization: `Bearer ${adminToken}`,
-        },
-      })
-      .then(function (res) {
-        setUsers(res.data);
-      });
-  }
+export function AllUsers({ admin, adminToken, users, getAllusers }) {
+  const navigate = useNavigate();
 
   useEffect(() => {
     getAllusers();
@@ -50,6 +37,12 @@ export function AllUsers({ admin, adminToken }) {
                   <h4>{item.name}</h4>
                   <p>{item.email}</p>
                 </div>
+                <button
+                  className="btn btn-success"
+                  onClick={() => navigate(`/manage-orders/${item._id}`)}
+                >
+                  Manage Orders
+                </button>
                 <MdDeleteForever
                   className="remove-btn"
                   onClick={() => remove(item._id)}

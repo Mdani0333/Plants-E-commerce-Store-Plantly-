@@ -37,6 +37,8 @@ import { LandingPage } from "./components/landing-page";
 import Footer from "./components/footer";
 import { useCookies } from "react-cookie";
 import { Checkout } from "./components/Pages/checkout";
+import { ShoppingHistory } from "./components/user/shoppingHistory";
+import { ManageOrders } from "./components/admin/manage-orders";
 
 function App() {
   //cookie
@@ -161,10 +163,27 @@ function App() {
       });
   }
 
+  const [users, setUsers] = useState([]);
+
+  function getAllusers() {
+    axios
+      .get("http://localhost:8080/user/all-users", {
+        headers: {
+          Authorization: `Bearer ${adminToken}`,
+        },
+      })
+      .then(function (res) {
+        setUsers(res.data);
+      });
+  }
+
   //getting only on start
   useEffect(() => {
     getProducts();
     getAllgardeners();
+    if (adminToken) {
+      getAllusers();
+    }
   }, []);
 
   //Adding to cart
@@ -389,6 +408,11 @@ function App() {
                   />
                   <Route
                     exact
+                    path="/my/shoppingHistory"
+                    element={<ShoppingHistory />}
+                  />
+                  <Route
+                    exact
                     path="/user/username-password"
                     element={
                       <ChangePasswordUser
@@ -492,7 +516,21 @@ function App() {
                   <Route
                     exact
                     path="/admin/all-users"
-                    element={<AllUsers admin={admin} adminToken={adminToken} />}
+                    element={
+                      <AllUsers
+                        admin={admin}
+                        adminToken={adminToken}
+                        users={users}
+                        getAllusers={getAllusers}
+                      />
+                    }
+                  />
+                  <Route
+                    exact
+                    path="/manage-orders/:id"
+                    element={
+                      <ManageOrders users={users} adminToken={adminToken} />
+                    }
                   />
                   <Route
                     exact

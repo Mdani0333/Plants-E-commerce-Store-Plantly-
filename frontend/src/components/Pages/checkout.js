@@ -47,7 +47,7 @@ export function Checkout({ cartTotal, token, getProducts, giveUser }) {
         // giveSuccess(res.data.message);
         getProducts();
         setLoading(false);
-        navigate("/account");
+        navigate("/my/shoppingHistory");
       });
   }
 

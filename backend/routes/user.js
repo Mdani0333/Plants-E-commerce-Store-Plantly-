@@ -199,6 +199,7 @@ router.patch("/cart/quantity", VerifyUserToken, async (req, res) => {
 router.patch("/order-placement", VerifyUserToken, async (req, res) => {
   const orderNo = uuidv4();
   req.body.orderNo = orderNo;
+  req.body.date = new Date();
   //decresing instock on basis of products quantity in cart
   for (let i = 0; i < req.body.products.length; i++) {
     await Products.updateOne(
@@ -252,9 +253,11 @@ router.patch("/order-placement", VerifyUserToken, async (req, res) => {
       <body>
           <h1>Your order was placed!</h1>
           <h2>Here are some Details:</h2>
+          <h3>Username: ${user.name}</h3>
+          <h3>Email: ${user.email}</h3>
           <h3>Order# ${orderNo}</h3>
           <div>${arrayItems}</div>
-          <p><strong>Total:</strong> Rs${req.body.total}</p>
+          <p><strong>Total:</strong>$ ${req.body.total}</p>
           <h3>>Shipping details</h3>
           <p><strong>Address:</strong> ${req.body.address}</p>
           <p><strong>Zip-Code:</strong> ${req.body.zipCode}</p>
@@ -279,6 +282,18 @@ router.patch("/order-placement", VerifyUserToken, async (req, res) => {
   );
 
   res.status(201).send({ user: user, message: "Your Order is Placed!" });
+});
+
+//manage Orders
+router.patch("/manage-orders", VerifyAdminToken, async (req, res) => {
+  await User.updateOne(
+    { _id: req.body.userId, "shoppingHistory._id": req.body.orderId },
+    { $set: { "shoppingHistory.$.status": req.body.status } }
+  );
+
+  const user = await User.findById(req.body.userId);
+
+  res.status(200).send({ user: user });
 });
 
 module.exports = router;
