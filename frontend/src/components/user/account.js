@@ -24,8 +24,11 @@ export function Account({ token, giveUser, giveToken, refreshUser }) {
   }
 
   useEffect(() => {
-    refreshUser();
+    if (token) {
+      refreshUser();
+    }
   }, []);
+  
   return (
     <div>
       {token ? (

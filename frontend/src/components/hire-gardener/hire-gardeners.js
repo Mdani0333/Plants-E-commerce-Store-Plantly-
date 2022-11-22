@@ -7,7 +7,18 @@ import { MdEmail } from "react-icons/md";
 import { MdPhone } from "react-icons/md";
 import { Link } from "react-router-dom";
 
-export function HireGard({ token, adminToken, gardToken, gardeners }) {
+export function HireGard({
+  token,
+  adminToken,
+  gardToken,
+  gardeners,
+  getAllgardeners,
+}) {
+  useEffect(() => {
+    if (token || adminToken || gardToken) {
+      getAllgardeners();
+    }
+  }, []);
   return (
     <div>
       {token || adminToken || gardToken ? (

@@ -27,8 +27,9 @@ import { GardenerLogin } from "./components/gardener/gardener-login";
 import { GardenerSignUp } from "./components/gardener/gardener-signUp";
 import { ProfileCompletion } from "./components/gardener/profile-completion";
 import { Profile } from "./components/gardener/profile";
-import { ChangePassword } from "./components/gardener/username-password-form";
+import { ChangePassword } from "./components/gardener/password-form";
 import { ChangePasswordUser } from "./components/user/username-password-form";
+import { ChangeUsername } from "./components/gardener/username-form";
 import { Account } from "./components/user/account";
 import { AllGardeners } from "./components/admin/all-gardeners";
 import { HireGard } from "./components/hire-gardener/hire-gardeners";
@@ -338,6 +339,7 @@ function App() {
                         adminToken={adminToken}
                         gardToken={gardToken}
                         gardeners={gardeners}
+                        getAllgardeners={getAllgardeners}
                       />
                     }
                   />
@@ -457,9 +459,20 @@ function App() {
                   />
                   <Route
                     exact
-                    path="/gardener/username-password"
+                    path="/gardener/password"
                     element={
                       <ChangePassword
+                        gardener={gardener}
+                        gardToken={gardToken}
+                        refreshGardener={refreshGardener}
+                      />
+                    }
+                  />
+                  <Route
+                    exact
+                    path="/gardener/username"
+                    element={
+                      <ChangeUsername
                         gardener={gardener}
                         gardToken={gardToken}
                         refreshGardener={refreshGardener}

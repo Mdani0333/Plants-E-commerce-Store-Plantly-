@@ -18,7 +18,9 @@ export function Profile({
   giveGardToken,
 }) {
   useEffect(() => {
-    refreshGardener();
+    if (gardToken) {
+      refreshGardener();
+    }
   }, []);
 
   //cookie
@@ -27,7 +29,8 @@ export function Profile({
   const navigate = useNavigate();
 
   //states
-  const [status, setStatus] = useState("Hired");
+  const [status, setStatus] = useState(gardener.resume[0].status || "");
+  console.log(status);
 
   //logout function
   function Logout() {
@@ -226,10 +229,13 @@ export function Profile({
             </div>
 
             <div class="change-username-password">
-              Or
-              <Link to="/gardener/username-password">
+              <Link to="/gardener/password">
+                <button class="btn btn-primary">change password</button>
+              </Link>
+              OR
+              <Link to="/gardener/username">
                 <button class="btn btn-primary">
-                  change username or password
+                  change username and other fields
                 </button>
               </Link>
             </div>

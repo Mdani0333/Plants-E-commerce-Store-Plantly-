@@ -40,8 +40,7 @@ router.post("/login", async (req, res) => {
   try {
     if (req.body.email) {
       const gardener = await Gardener.findOne({ email: req.body.email });
-      if (!gardener)
-        return res.status(401).send({ message: "invalid Email" });
+      if (!gardener) return res.status(401).send({ message: "invalid Email" });
 
       if (req.body.password) {
         const validPassword = await bcrypt.compare(
@@ -131,44 +130,52 @@ router.delete("/delete/:id", VerifyAdminToken, async (req, res) => {
 });
 
 //updating username or password
-router.patch("/changePassword", VerifyGardenerToken, async (req, res) => {
+router.patch("/changeUsernamePassword", VerifyGardenerToken, async (req, res) => {
   try {
-    if (req.body.name) {
-      if (req.body.phoneNo) {
-        if (!req.body.profilePic) {
-          req.body.profilePic =
-            "https://www.dropbox.com/s/t08xt7u8ndsdgxp/user-g39947294e_1280.png?raw=1";
-        }
-        if (req.body.oldPassword && req.body.newPassword) {
-          const gardener = await Gardener.findById(req.headers.gardenerId);
-          const validPassword = await bcrypt.compare(
-            req.body.oldPassword,
-            gardener.password
-          );
-          if (!validPassword)
-            return res.status(401).send({ message: "invalid Old Password" });
+    if (req.body.type === "PASSWORD") {
+      if (req.body.oldPassword && req.body.newPassword) {
+        const gardener = await Gardener.findById(req.headers.gardenerId);
+        const validPassword = await bcrypt.compare(
+          req.body.oldPassword,
+          gardener.password
+        );
+        if (!validPassword)
+          return res.status(401).send({ message: "invalid Old Password" });
 
-          const salt = await bcrypt.genSalt(Number(process.env.SALT));
-          const hashPassword = await bcrypt.hash(req.body.newPassword, salt);
+        const salt = await bcrypt.genSalt(Number(process.env.SALT));
+        const hashPassword = await bcrypt.hash(req.body.newPassword, salt);
+
+        await Gardener.updateOne(
+          { _id: req.headers.gardenerId },
+          { password: hashPassword }
+        );
+        res.status(200).send({ message: "updated!" });
+      } else {
+        res.status(401).send({ message: "Password fields can't be empty!" });
+      }
+    } else if (req.body.type == "USERNAME") {
+      if (req.body.name) {
+        if (req.body.phoneNo) {
+          if (!req.body.profilePic) {
+            req.body.profilePic =
+              "https://www.dropbox.com/s/t08xt7u8ndsdgxp/user-g39947294e_1280.png?raw=1";
+          }
 
           await Gardener.updateOne(
             { _id: req.headers.gardenerId },
             {
               name: req.body.name,
-              profilePic: req.body.profilePic,
               phoneNo: req.body.phoneNo,
-              password: hashPassword,
+              profilePic: req.body.profilePic,
             }
           );
           res.status(200).send({ message: "updated!" });
         } else {
-          res.status(401).send({ message: "Password fields can't be empty!" });
+          res.status(401).send({ message: "Contact Number can't be empty!" });
         }
       } else {
-        res.status(401).send({ message: "Contact Number can't be empty!" });
+        res.status(401).send({ message: "Name can't be empty!" });
       }
-    } else {
-      res.status(401).send({ message: "Name can't be empty!" });
     }
   } catch (error) {
     res.status(500).send({ message: "Server Error" });

@@ -16,6 +16,7 @@ export function AdminLogin({ giveAdminToken, giveAdmin }) {
   });
 
   const [error, setError] = useState();
+  const [showPassword, setShowPassword] = useState(false);
 
   //Handlechange
   function handleChange({ currentTarget: input }) {
@@ -69,7 +70,7 @@ export function AdminLogin({ giveAdminToken, giveAdmin }) {
           <div class="form-group">
             <label for="exampleInputPassword1">Password</label>
             <input
-              type="password"
+              type={showPassword ? "text" : "password"}
               class="form-control"
               id="exampleInputPassword1"
               placeholder="Password"
@@ -78,6 +79,23 @@ export function AdminLogin({ giveAdminToken, giveAdmin }) {
               required
               name="password"
             />
+          </div>
+          <br />
+
+          <div class="form-check form-check-inline">
+            <input
+              class="form-check-input"
+              type="checkbox"
+              name="showPassword"
+              id="yes"
+              defaultChecked={showPassword}
+              onChange={() => {
+                setShowPassword(!showPassword);
+              }}
+            />
+            <label class="form-check-label" for="yes">
+              Show Password
+            </label>
           </div>
           <br />
 

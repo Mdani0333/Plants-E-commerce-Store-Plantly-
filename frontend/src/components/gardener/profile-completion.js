@@ -20,13 +20,13 @@ export function ProfileCompletion({ gardener, gardToken }) {
   });
 
   const [data, setData] = useState({
-    status: "Un-Employed",
-    address: "",
-    summary: "",
-    experience: [],
-    education: "",
-    skills: "",
-    hobbies: "",
+    status: gardener.resume[0].status || "",
+    address: gardener.resume[0].address || "",
+    summary: gardener.resume[0].summary || "",
+    experience: gardener.resume[0].experience || [],
+    education: gardener.resume[0].education || "",
+    skills: gardener.resume[0].skills || "",
+    hobbies: gardener.resume[0].hobbies || "",
   });
   console.log(data);
 
@@ -69,6 +69,25 @@ export function ProfileCompletion({ gardener, gardToken }) {
       }
     }
   };
+
+  const formatDate = (dateString) => {
+    const options = {
+      year: "numeric",
+      month: "long",
+      day: "numeric",
+    };
+    return new Date(dateString).toLocaleDateString(undefined, options);
+  };
+
+  function Remove(index) {
+    let array = [];
+    for (let i = 0; i < data.experience.length; i++) {
+      if (i != index) {
+        array.push(data.experience[i]);
+      }
+    }
+    return array;
+  }
 
   return (
     <div>
@@ -187,7 +206,7 @@ export function ProfileCompletion({ gardener, gardToken }) {
           {next && (
             <div className="form-container">
               <div>
-                {data.experience.length === 0 ? (
+                {Object.keys(data.experience).length === 0 ? (
                   <div className="display-none"></div>
                 ) : (
                   <div>
@@ -206,10 +225,8 @@ export function ProfileCompletion({ gardener, gardToken }) {
                           <div className="exp-field">
                             <h5>Work duration: </h5>
                             <span className="exp-item">
-                              {item.fromDate.getUTCMonth()}/
-                              {item.fromDate.getUTCFullYear()} -{" "}
-                              {item.toDate.getUTCMonth()}/
-                              {item.toDate.getUTCFullYear()}
+                              {formatDate(item.fromDate)} -{" "}
+                              {formatDate(item.toDate)}
                             </span>
                           </div>
                           <div className="exp-field">
@@ -219,6 +236,17 @@ export function ProfileCompletion({ gardener, gardToken }) {
                             </span>
                           </div>
                           <br />
+                          <button
+                            className="btn btn-warning"
+                            onClick={() =>
+                              setData({
+                                ...data,
+                                experience: Remove(index),
+                              })
+                            }
+                          >
+                            Remove
+                          </button>
                         </div>
                       );
                     })}

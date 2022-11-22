@@ -29,7 +29,7 @@ export default function Navbar({ token, adminToken, gardToken, gardener }) {
           <h1 className="logo_label">
             Plantly<span className="logo_dot">.</span>
           </h1>
-          {token || gardToken || adminToken ? (
+          {/* {token || gardToken || adminToken ? (
             <div className="display-none"></div>
           ) : (
             <form className="flex">
@@ -41,7 +41,7 @@ export default function Navbar({ token, adminToken, gardToken, gardener }) {
               />
               <AiOutlineSearch className="icons" />
             </form>
-          )}
+          )} */}
         </div>
         <div id="flx">
           {Object.keys(gardener).length === 0 ? (
