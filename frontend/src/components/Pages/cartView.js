@@ -39,7 +39,7 @@ export function CartView({ removeFromCart, token, giveUser, cartTotal }) {
           <br />
           <div className="total-amount-div">
             <h3>Total:</h3>
-            <h3>${cartTotal}</h3>
+            <h3>Rs{cartTotal}</h3>
           </div>
           <br />
           <div>

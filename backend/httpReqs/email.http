@@ -1,8 +1,10 @@
-POST http://localhost:8080/user/email
+POST http://localhost:8080/user/order-placement
 content-type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2MzgzNjg4ODMxMWMyMDk3ZWFmNGYxNzAiLCJ0b2tlblR5cGUiOiJVU0VSIiwiaWF0IjoxNjY5NTU2MzcwLCJleHAiOjE2NzAxNjExNzB9.WB4ZaQiR1AtmUvhW779nfF6NhDcteRgYM7HRlZdjep8
 
 {
     "status": "Delivering...",
+    "shippingCost": 350,
     "products": [{
     
         "name":"Sani Sahil",

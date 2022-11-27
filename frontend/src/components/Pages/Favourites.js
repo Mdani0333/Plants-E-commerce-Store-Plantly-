@@ -29,7 +29,7 @@ export function Favourites({ removeFromFav }) {
                     <p>-{item.specie}</p>
                     <h2>{item.name}</h2>
                     <label className="span-box">
-                      <span className="product-price">${item.price}</span>
+                      <span className="product-price">Rs{item.price}</span>
                     </label>
                     <label className="span-box">
                       {item.instock ? (
@@ -44,7 +44,7 @@ export function Favourites({ removeFromFav }) {
                     >
                       Remove from Favourites
                     </button>
-                    <Link to={`/product${item.id}`} className="product-link">
+                    <Link to={`/product${item._id}`} className="product-link">
                       <button className="product-btn">
                         See Product details
                       </button>

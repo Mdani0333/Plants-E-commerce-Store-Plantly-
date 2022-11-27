@@ -32,7 +32,7 @@ export function View({ addToCart, addToFav }) {
           <h1>{view.name}</h1>
           <p className="product-description">{view.description}</p>
           <label className="span-box">
-            <span className="product-price">${view.price}</span>
+            <span className="product-price">Rs{view.price}</span>
           </label>
           <label className="span-box">
             {view.instock ? (

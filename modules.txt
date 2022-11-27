@@ -24,3 +24,11 @@ change status and remove/update info(CV)//download CV
 
 11--name is not required in any login --required fields are email and password--(3*)
 
+order# change / order cancellation within 30 mins
+delivery charges
+dollar to rupees / phone no change in footer. 
+nav links Order
+signup email verification
+form fields validation in checkout page and any other form with required and optional showing
+landing page categories link leads to category page
+

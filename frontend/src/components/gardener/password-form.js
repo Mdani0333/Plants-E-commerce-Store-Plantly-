@@ -16,6 +16,7 @@ export function ChangePassword({ gardToken, gardener, refreshGardener }) {
 
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
+  const [loading, setLoading] = useState(false);
 
   //Handlechange
   function handleChange({ currentTarget: input }) {
@@ -25,6 +26,8 @@ export function ChangePassword({ gardToken, gardener, refreshGardener }) {
   //axois request
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setError("");
+    setLoading(true);
     axios
       .patch("http://localhost:8080/gardener/changeUsernamePassword", data, {
         headers: {
@@ -34,9 +37,13 @@ export function ChangePassword({ gardToken, gardener, refreshGardener }) {
       .then(function (res) {
         setError(null);
         setSuccess(res.data.message);
+        setLoading(false);
         refreshGardener();
       })
-      .catch((e) => setError(e.response.data.message));
+      .catch((e) => {
+        setError(e.response.data.message);
+        setLoading(false);
+      });
   };
 
   return (
@@ -46,8 +53,10 @@ export function ChangePassword({ gardToken, gardener, refreshGardener }) {
           <h3>change Password</h3>
           <br />
 
-          <div class="form-group">
-            <label for="exampleInputPassword2">Old Password</label>
+          <div class="form-group required">
+            <label for="exampleInputPassword2" className="control-label">
+              Old Password
+            </label>
             <input
               type={showPassword ? "text" : "password"}
               class="form-control"
@@ -61,8 +70,10 @@ export function ChangePassword({ gardToken, gardener, refreshGardener }) {
           </div>
           <br />
 
-          <div class="form-group">
-            <label for="exampleInputPassword1">New Password</label>
+          <div class="form-group required">
+            <label for="exampleInputPassword1" className="control-label">
+              New Password
+            </label>
             <input
               type={showPassword ? "text" : "password"}
               class="form-control"
@@ -93,9 +104,20 @@ export function ChangePassword({ gardToken, gardener, refreshGardener }) {
           </div>
           <br />
 
-          <button type="submit" class="btn btn-primary">
-            Change
-          </button>
+          {!loading && (
+            <button type="submit" class="btn btn-primary">
+              change
+            </button>
+          )}
+          {loading && (
+            <button class="btn btn-primary" type="button" disabled>
+              <span
+                class="spinner-border spinner-border-sm"
+                role="status"
+                aria-hidden="true"
+              ></span>
+            </button>
+          )}
           <br />
           {error && <div className="redSpan">{error}</div>}
           {success && <div className="greenSpan">{success}</div>}

@@ -10,11 +10,12 @@ export function ChangeUsername({ gardToken, gardener, refreshGardener }) {
     type: "USERNAME",
     name: gardener.name,
     phoneNo: gardener.phoneNo,
-    profilePic: "",
+    profilePic: gardener.profilePic,
   });
 
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
+  const [loading, setLoading] = useState(false);
 
   //Handlechange
   function handleChange({ currentTarget: input }) {
@@ -24,6 +25,8 @@ export function ChangeUsername({ gardToken, gardener, refreshGardener }) {
   //axois request
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setError("");
+    setLoading(true);
     axios
       .patch("http://localhost:8080/gardener/changeUsernamePassword", data, {
         headers: {
@@ -33,9 +36,13 @@ export function ChangeUsername({ gardToken, gardener, refreshGardener }) {
       .then(function (res) {
         setError(null);
         setSuccess(res.data.message);
+        setLoading(false);
         refreshGardener();
       })
-      .catch((e) => setError(e.response.data.message));
+      .catch((e) => {
+        setError(e.response.data.message);
+        setLoading(false);
+      });
   };
 
   return (
@@ -44,8 +51,10 @@ export function ChangeUsername({ gardToken, gardener, refreshGardener }) {
         <form className="form-container" onSubmit={handleSubmit}>
           <h3>Change Username</h3>
           <br />
-          <div class="form-group">
-            <label for="exampleInputUsername1">Username</label>
+          <div class="form-group required">
+            <label for="exampleInputUsername1" className="control-label">
+              Username
+            </label>
             <input
               type="text"
               class="form-control"
@@ -73,25 +82,40 @@ export function ChangeUsername({ gardToken, gardener, refreshGardener }) {
           </div>
           <br />
 
-          <div class="form-group">
-            <label for="phoneNumber">Contact Number</label>
+          <div class="form-group required">
+            <label for="phoneNumber" className="control-label">
+              Contact Number
+            </label>
             <input
-              type="number"
+              type="tel"
               class="form-control"
               id="phoneNumber"
-              placeholder="03**-*******"
+              placeholder="03*********"
               value={data.phoneNo}
               onChange={handleChange}
               required
               name="phoneNo"
-              maxLength={11}
+              maxLength="11"
+              pattern="(0)(3)([0-9]{2})([0-9]{7})"
+              title="03*********"
             />
           </div>
           <br />
 
-          <button type="submit" class="btn btn-primary">
-            Change
-          </button>
+          {!loading && (
+            <button type="submit" class="btn btn-primary">
+              change
+            </button>
+          )}
+          {loading && (
+            <button class="btn btn-primary" type="button" disabled>
+              <span
+                class="spinner-border spinner-border-sm"
+                role="status"
+                aria-hidden="true"
+              ></span>
+            </button>
+          )}
           <br />
           {error && <div className="redSpan">{error}</div>}
           {success && <div className="greenSpan">{success}</div>}

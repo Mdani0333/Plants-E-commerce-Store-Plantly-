@@ -28,7 +28,7 @@ export function Product({ categories, addToCart, addToFav }) {
                         <p>-{item.specie}</p>
                         <h2>{item.name}</h2>
                         <label className="span-box">
-                          <span className="product-price">${item.price}</span>
+                          <span className="product-price">Rs{item.price}</span>
                         </label>
                         <label className="span-box">
                           {item.instock ? (

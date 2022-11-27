@@ -105,13 +105,13 @@ export default function Footer() {
                   <i class="fas fa-phone mr-3">
                     <BsTelephone className="h-green" />
                   </i>{" "}
-                  + 01 234 567 88
+                  0345-0978654
                 </p>
                 <p className="white-text">
                   <i class="fas fa-print mr-3">
                     <BsTelephone className="h-green" />
                   </i>{" "}
-                  + 01 234 567 89
+                  0300-0987654
                 </p>
               </div>
             </div>

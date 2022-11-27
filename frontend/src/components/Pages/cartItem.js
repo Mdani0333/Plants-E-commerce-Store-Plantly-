@@ -54,7 +54,7 @@ export function CartItem({ removeFromCart, item, token, giveUser }) {
         <h4>{item.name}</h4>
       </span>
       <span className="greenSpan">instock ({item.instock})</span>
-      <span className="product-price">${item.price}</span>
+      <span className="product-price">Rs{item.price}</span>
       <span className="qty-div">
         <input
           type="number"

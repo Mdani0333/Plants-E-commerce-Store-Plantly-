@@ -50,10 +50,8 @@ export function ManageOrders({ users, adminToken }) {
             {user.shoppingHistory.map((item, index) => {
               return (
                 <div key={index} className="order-item">
-                  <div className="flex-row">
-                    <h3 style={{ marginRight: "50px" }}>
-                      Order# {item.orderNo}
-                    </h3>{" "}
+                  <div className="flex-full-space-between">
+                    <h3>Order# {item.orderNo}</h3>{" "}
                     <span
                       className={
                         item.status === "Cancelled" ? "redSpan" : "greenSpan"
@@ -78,14 +76,24 @@ export function ManageOrders({ users, adminToken }) {
                             {value.price} * {value.quantity}
                           </span>
                           <span>
-                            Sub-Total: ${value.price * value.quantity}
+                            Sub-Total: Rs{value.price * value.quantity}
                           </span>
                         </div>
                       );
                     })}
                     <div className="flex-end">
+                      <h5 style={{ marginRight: "10px" }}>Sum:</h5>
+                      <span className="greenSpan">Rs{item.total}</span>
+                    </div>
+                    <div className="flex-end">
+                      <h5 style={{ marginRight: "10px" }}>Shipping Cost:</h5>
+                      <span className="greenSpan">Rs{item.shippingCost}</span>
+                    </div>
+                    <div className="flex-end">
                       <h3 style={{ marginRight: "10px" }}>Total:</h3>
-                      <h3 className="greenSpan">${item.total}</h3>
+                      <h3 className="greenSpan">
+                        Rs{item.total + item.shippingCost}
+                      </h3>
                     </div>
                   </div>
 

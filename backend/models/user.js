@@ -65,6 +65,7 @@ const shoppingHistory = new mongoose.mongoose.Schema({
   note: { type: String, required: true },
   paymentType: { type: String, required: true },
   products: [cartSchema],
+  shippingCost: { type: Number, required: true },
   total: { type: Number, required: true },
   date: { type: Date, required: true },
 });

@@ -17,6 +17,7 @@ export function GardenerLogin({ giveGardToken, giveGard, gardener }) {
 
   const [error, setError] = useState();
   const [showPassword, setShowPassword] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   //Handlechange
   function handleChange({ currentTarget: input }) {
@@ -27,6 +28,8 @@ export function GardenerLogin({ giveGardToken, giveGard, gardener }) {
   const navigate = useNavigate();
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setError("");
+    setLoading(true);
     try {
       const url = "http://localhost:8080/gardener/login";
       const { data: res } = await axios.post(url, data);
@@ -36,9 +39,12 @@ export function GardenerLogin({ giveGardToken, giveGard, gardener }) {
 
       localStorage.setItem("Gardener", JSON.stringify(res.Gardener));
       giveGard(res.Gardener);
+
+      setLoading(false);
       navigate("/profile");
     } catch (error) {
       setError(error.response.data.message);
+      setLoading(false);
     }
   };
 
@@ -51,8 +57,10 @@ export function GardenerLogin({ giveGardToken, giveGard, gardener }) {
           <h3>Gardener--Login</h3>
           <br />
 
-          <div class="form-group">
-            <label for="exampleInputEmail1">Email address</label>
+          <div class="form-group required">
+            <label for="exampleInputEmail1" className="control-label">
+              Email address
+            </label>
             <input
               type="email"
               class="form-control"
@@ -67,8 +75,10 @@ export function GardenerLogin({ giveGardToken, giveGard, gardener }) {
           </div>
           <br />
 
-          <div class="form-group">
-            <label for="exampleInputPassword1">Password</label>
+          <div class="form-group required">
+            <label for="exampleInputPassword1" className="control-label">
+              Password
+            </label>
             <input
               type={showPassword ? "text" : "password"}
               class="form-control"
@@ -99,9 +109,20 @@ export function GardenerLogin({ giveGardToken, giveGard, gardener }) {
           </div>
           <br />
 
-          <button type="submit" class="btn btn-primary">
-            Login
-          </button>
+          {!loading && (
+            <button type="submit" class="btn btn-success">
+              Login
+            </button>
+          )}
+          {loading && (
+            <button class="btn btn-success" type="button" disabled>
+              <span
+                class="spinner-border spinner-border-sm"
+                role="status"
+                aria-hidden="true"
+              ></span>
+            </button>
+          )}
           <br />
 
           <p>

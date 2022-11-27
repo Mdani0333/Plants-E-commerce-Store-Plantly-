@@ -50,6 +50,7 @@ export function UpdateForm({ admin, adminToken }) {
   });
   const [error, setError] = useState();
   const [success, setSuccess] = useState("");
+  const [loading, setLoading] = useState(false);
 
   //Handlechange
   function handleChange({ currentTarget: input }) {
@@ -59,6 +60,8 @@ export function UpdateForm({ admin, adminToken }) {
   //axois request
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setError("");
+    setLoading(true);
     try {
       const url = `http://localhost:8080/products/update/${id}`;
       const { data: res } = await axios.put(url, data, {
@@ -66,6 +69,7 @@ export function UpdateForm({ admin, adminToken }) {
           Authorization: `Bearer ${adminToken}`,
         },
       });
+      setLoading(false);
       setSuccess(res.message);
     } catch (error) {
       if (
@@ -73,6 +77,7 @@ export function UpdateForm({ admin, adminToken }) {
         error.response.status <= 500
       ) {
         setError(error.response.data.message);
+        setLoading(false);
       }
     }
   };
@@ -82,10 +87,12 @@ export function UpdateForm({ admin, adminToken }) {
       {adminToken ? (
         <div>
           <form className="form-container" onSubmit={handleSubmit}>
-            <h3>Add a Product</h3>
+            <h3>Update Product</h3>
             <br />
-            <div class="form-group">
-              <label for="exampleInputUsername1">Name</label>
+            <div class="form-group required">
+              <label for="exampleInputUsername1" className="control-label">
+                Name
+              </label>
               <input
                 type="text"
                 class="form-control"
@@ -99,8 +106,10 @@ export function UpdateForm({ admin, adminToken }) {
             </div>
             <br />
 
-            <div class="form-group">
-              <label for="category">Category</label>
+            <div class="form-group required">
+              <label for="category" className="control-label">
+                Category
+              </label>
               <input
                 type="text"
                 class="form-control"
@@ -114,8 +123,10 @@ export function UpdateForm({ admin, adminToken }) {
             </div>
             <br />
 
-            <div class="form-group">
-              <label for="specie">Specie</label>
+            <div class="form-group required">
+              <label for="specie" className="control-label">
+                Specie
+              </label>
               <input
                 type="text"
                 class="form-control"
@@ -129,8 +140,10 @@ export function UpdateForm({ admin, adminToken }) {
             </div>
             <br />
 
-            <div class="form-group">
-              <label for="image">Image link</label>
+            <div class="form-group required">
+              <label for="image" className="control-label">
+                Image link
+              </label>
               <input
                 type="url"
                 class="form-control"
@@ -144,8 +157,10 @@ export function UpdateForm({ admin, adminToken }) {
             </div>
             <br />
 
-            <div class="form-group">
-              <label for="price">Price</label>
+            <div class="form-group required">
+              <label for="price" className="control-label">
+                Price
+              </label>
               <input
                 type="number"
                 class="form-control"
@@ -159,8 +174,10 @@ export function UpdateForm({ admin, adminToken }) {
             </div>
             <br />
 
-            <div class="form-group">
-              <label for="instock">InStock</label>
+            <div class="form-group required">
+              <label for="instock" className="control-label">
+                InStock
+              </label>
               <input
                 type="number"
                 class="form-control"
@@ -174,8 +191,10 @@ export function UpdateForm({ admin, adminToken }) {
             </div>
             <br />
 
-            <div class="form-group">
-              <label for="des">Description</label>
+            <div class="form-group required">
+              <label for="des" className="control-label">
+                Description
+              </label>
               <textarea
                 class="form-control"
                 id="des"
@@ -188,8 +207,10 @@ export function UpdateForm({ admin, adminToken }) {
             </div>
             <br />
 
-            <div class="form-group">
-              <label for="temp">temprature</label>
+            <div class="form-group required">
+              <label for="temp" className="control-label">
+                temprature
+              </label>
               <input
                 type="text"
                 class="form-control"
@@ -203,8 +224,10 @@ export function UpdateForm({ admin, adminToken }) {
             </div>
             <br />
 
-            <div class="form-group">
-              <label for="humidity">humidity</label>
+            <div class="form-group required">
+              <label for="humidity" className="control-label">
+                humidity
+              </label>
               <input
                 type="number"
                 class="form-control"
@@ -218,8 +241,10 @@ export function UpdateForm({ admin, adminToken }) {
             </div>
             <br />
 
-            <div class="form-group">
-              <label for="water">Water</label>
+            <div class="form-group required">
+              <label for="water" className="control-label">
+                Water
+              </label>
               <input
                 type="number"
                 class="form-control"
@@ -233,8 +258,10 @@ export function UpdateForm({ admin, adminToken }) {
             </div>
             <br />
 
-            <div class="form-group">
-              <label for="light">Light</label>
+            <div class="form-group required">
+              <label for="light" className="control-label">
+                Light
+              </label>
               <input
                 type="text"
                 class="form-control"
@@ -248,8 +275,10 @@ export function UpdateForm({ admin, adminToken }) {
             </div>
             <br />
 
-            <div class="form-group">
-              <label for="height">Height</label>
+            <div class="form-group required">
+              <label for="height" className="control-label">
+                Height
+              </label>
               <input
                 type="text"
                 class="form-control"
@@ -263,8 +292,8 @@ export function UpdateForm({ admin, adminToken }) {
             </div>
             <br />
 
-            <div class="form-group">
-              <label>Benefits:</label>
+            <div class="form-group required">
+              <label className="control-label">Benefits:</label>
               <br />
               <label className="checkbox-label">Air ReFreshner</label>
               <div class="form-check form-check-inline">
@@ -285,8 +314,10 @@ export function UpdateForm({ admin, adminToken }) {
             </div>
             <br />
 
-            <div class="form-group">
-              <label for="otherbenefits">Other Benefits</label>
+            <div class="form-group required">
+              <label for="otherbenefits" className="control-label">
+                Other Benefits
+              </label>
               <textarea
                 class="form-control"
                 id="otherbenefits"
@@ -300,8 +331,8 @@ export function UpdateForm({ admin, adminToken }) {
             <br />
             <br />
 
-            <div class="form-group">
-              <label>Cautions:</label>
+            <div class="form-group required">
+              <label className="control-label">Cautions:</label>
               <br />
               <label className="checkbox-label">Animal Friendly </label>
               <div class="form-check form-check-inline">
@@ -361,9 +392,20 @@ export function UpdateForm({ admin, adminToken }) {
             <br />
             <br />
 
-            <button type="submit" class="btn btn-primary">
-              Update
-            </button>
+            {!loading && (
+              <button type="submit" class="btn btn-primary">
+                Upload
+              </button>
+            )}
+            {loading && (
+              <button class="btn btn-primary" type="button" disabled>
+                <span
+                  class="spinner-border spinner-border-sm"
+                  role="status"
+                  aria-hidden="true"
+                ></span>
+              </button>
+            )}
             <br />
 
             {error && <div className="redSpan">{error}</div>}

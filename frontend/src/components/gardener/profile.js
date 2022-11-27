@@ -30,7 +30,6 @@ export function Profile({
 
   //states
   const [status, setStatus] = useState(gardener.resume[0].status || "");
-  console.log(status);
 
   //logout function
   function Logout() {
@@ -101,8 +100,8 @@ export function Profile({
                   ) : (
                     <span
                       className={
-                        gardener.resume[0].status == "Un-Employed" ||
-                        gardener.resume[0].status == "Not-available"
+                        gardener.resume[0].status ==
+                        "Not Available For Work now"
                           ? "redSpan"
                           : "greenSpan"
                       }
@@ -214,9 +213,10 @@ export function Profile({
                       id="inlineFormCustomSelect"
                       onChange={(e) => setStatus(e.target.value)}
                     >
-                      <option value="Hired">Hired</option>
-                      <option value="Un-Employed">Un-Employed</option>
-                      <option value="Not-available">Not available now</option>
+                      <option value="Available For Work">Available</option>
+                      <option value="Not Available For Work now">
+                        Not Available
+                      </option>
                     </select>
                   </div>
                   <div class="col-auto my-1">

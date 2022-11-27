@@ -4,8 +4,39 @@ const Products = require("../models/product");
 const bcrypt = require("bcrypt");
 const { VerifyUserToken, VerifyAdminToken } = require("../jwt/Auth");
 const jwt = require("jsonwebtoken");
-var nodemailer = require("nodemailer");
-const { v4: uuidv4 } = require("uuid");
+const {
+  orderConfirmationEmail,
+  verificationCodeEmail,
+} = require("../utils/email");
+const ShortUniqueId = require("short-unique-id");
+
+const orderNumber = new ShortUniqueId({
+  dictionary: "alphanum_upper",
+  shuffle: false,
+  length: 16,
+});
+const emailVerificationCode = new ShortUniqueId({
+  dictionary: "alphanum_upper",
+  shuffle: true,
+  length: 4,
+});
+
+//SignUp email Verification
+router.post("/email-verification", async (req, res) => {
+  if (req.body.email) {
+    const user = await User.findOne({ email: req.body.email });
+    if (user)
+      return res
+        .status(409)
+        .send({ message: "User with given email already exists!" });
+
+    const code = emailVerificationCode();
+    verificationCodeEmail(code, req);
+    res.status(200).send({ verificationCode: code });
+  } else {
+    res.status(400).send({ message: "email is required!" });
+  }
+});
 
 //user signUp
 router.post("/signUp", async (req, res) => {
@@ -13,12 +44,6 @@ router.post("/signUp", async (req, res) => {
     const { error } = validate(req.body);
     if (error)
       return res.status(400).send({ message: error.details[0].message });
-
-    const user = await User.findOne({ email: req.body.email });
-    if (user)
-      return res
-        .status(409)
-        .send({ message: "User with given email already exists!" });
 
     const salt = await bcrypt.genSalt(Number(process.env.SALT));
     const hashPassword = await bcrypt.hash(req.body.password, salt);
@@ -196,95 +221,36 @@ router.patch("/cart/quantity", VerifyUserToken, async (req, res) => {
 });
 
 //Order placement
-router.patch("/order-placement", VerifyUserToken, async (req, res) => {
-  const orderNo = uuidv4();
-  req.body.orderNo = orderNo;
-  req.body.date = new Date();
-  //decresing instock on basis of products quantity in cart
-  for (let i = 0; i < req.body.products.length; i++) {
-    await Products.updateOne(
-      { _id: req.body.products[i]._id },
-      { $inc: { instock: -req.body.products[i].quantity } }
-    );
-  }
-  //creating shopping history
-  await User.updateOne(
-    { _id: req.headers.userId },
-    { $push: { shoppingHistory: req.body } }
-  );
-  //setting cart to empty
-  await User.updateOne({ _id: req.headers.userId }, { $set: { cart: [] } });
-  const user = await User.findById(req.headers.userId);
+router.post("/order-placement", VerifyUserToken, async (req, res) => {
+  try {
+    req.body.orderNo = orderNumber();
+    req.body.date = new Date();
 
-  const transporter = nodemailer.createTransport({
-    service: "gmail",
-    secureConnection: true,
-    auth: {
-      user: "adnanmanzoorfiverr@gmail.com",
-      pass: "ojgalpnjdadcusfp",
-    },
-  });
-
-  var arrayItems = "";
-  req.body.products.forEach((element) => {
-    arrayItems +=
-      "<p>" +
-      element.specie +
-      " " +
-      element.name +
-      " " +
-      element.price +
-      "*" +
-      element.quantity +
-      " " +
-      "</p>";
-  });
-
-  transporter.sendMail(
-    {
-      from: '"Plantly" <noReply@gmail.com>',
-      to: `adnanmanzoor1965@gmail.com, ${user.email}`,
-      subject: "#Order Info",
-      html: `<!DOCTYPE html>
-      <html>
-      <head>
-          <title>Order Info</title>
-      </head>
-      <body>
-          <h1>Your order was placed!</h1>
-          <h2>Here are some Details:</h2>
-          <h3>Username: ${user.name}</h3>
-          <h3>Email: ${user.email}</h3>
-          <h3>Order# ${orderNo}</h3>
-          <div>${arrayItems}</div>
-          <p><strong>Total:</strong>$ ${req.body.total}</p>
-          <h3>>Shipping details</h3>
-          <p><strong>Address:</strong> ${req.body.address}</p>
-          <p><strong>Zip-Code:</strong> ${req.body.zipCode}</p>
-          <p><strong>Contact Number:</strong> ${req.body.phoneNo}</p>
-          <p><strong>Note:</strong> ${req.body.note}</p>
-          <h3>>Payment details</h3>
-          <p><strong>Payment Type:</strong> ${req.body.paymentType}</p>
-          <p><strong>Current Status</strong> is "${req.body.status}"</p>
-         
-          <strong>Thank You!</strong>
-          <strong>Happy Shopping!</strong>
-      </body>
-      </html>`,
-    },
-    function (error, info) {
-      if (error) {
-        console.log(error);
-      } else {
-        console.log({ message: "Email Sent", Response: info.response });
-      }
+    //decresing instock on basis of products quantity in cart
+    for (let i = 0; i < req.body.products.length; i++) {
+      await Products.updateOne(
+        { _id: req.body.products[i]._id },
+        { $inc: { instock: -req.body.products[i].quantity } }
+      );
     }
-  );
+    //creating shopping history
+    await User.updateOne(
+      { _id: req.headers.userId },
+      { $push: { shoppingHistory: req.body } }
+    );
+    //setting cart to empty
+    await User.updateOne({ _id: req.headers.userId }, { $set: { cart: [] } });
+    const user = await User.findById(req.headers.userId);
 
-  res.status(201).send({ user: user, message: "Your Order is Placed!" });
+    orderConfirmationEmail(orderNumber(), user, req);
+
+    res.status(201).send({ user: user, message: "Your Order is Placed!" });
+  } catch (error) {
+    res.status(400).send({ message: "Server Error!" });
+  }
 });
 
-//manage Orders
+//manage Orders status
 router.patch("/manage-orders", VerifyAdminToken, async (req, res) => {
   await User.updateOne(
     { _id: req.body.userId, "shoppingHistory._id": req.body.orderId },

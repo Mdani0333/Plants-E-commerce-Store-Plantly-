@@ -1,29 +1,27 @@
 POST http://localhost:8080/products/post
 content-type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhZG1pbklkIjoiNjMyNTk5YWRlZGE0OGZkMjE0ZmExNmExIiwidG9rZW5UeXBlIjoiQURNSU4iLCJpYXQiOjE2Njg5NTMyOTIsImV4cCI6MTY2OTU1ODA5Mn0.EPvYQuCkd8yJQ8LfP-MvXz3AR64-mVOtL9jwftujLsw
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhZG1pbklkIjoiNjMyNTk5YWRlZGE0OGZkMjE0ZmExNmExIiwidG9rZW5UeXBlIjoiQURNSU4iLCJpYXQiOjE2Njk1Nzc2MjIsImV4cCI6MTY3MDE4MjQyMn0.KAukhR5_3KnTEfL3sjA5e4svSzdgnOf0BKgBd6-yApg
 
 {
-    
-        "name":"Sani Sahil",
-        "category":"agricultural",
-        "specie":"Alocasia Baginda",
-        "instock":0,
-        "price":24.99,
-        "description":"Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse gravida interdum tincidunt. Donec urna justo, porttitor vitae ultricies non, ornare quis arcu. Orci varius natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Curabitur interdum aliquet arcu nec bibendum. Aenean sed tellus vel leo accumsan tempor. In fringilla elit ac quam laoreet, sed bibendum lacus imperdiet. Quisque non sagittis augue",
-        "temprature":"18-28",
-        "humidity":82,
-        "water":250,
-        "light":"Does not need direct light but give plenty of indirect light",
-        "height":"38-48",
-        "benefits":{
-            "airFreshner":true,
-            "otherBenefits":"Reduces dust in air and increases humidity level."
-        },
-        "cautions":{
-            "animalFriendly":false,
-            "poisonous":true,
-            "deathOnConsumption":true
-        },
-        "image":"https://www.dropbox.com/s/aclgzvf3zvadk0i/sanni-sahil-LEaK1Lmd1a8-unsplash-removebg-preview.png?raw=1"
-
-}
+    "name": "Rose Plant",
+    "category": "flower",
+    "specie": "Colorful Rosa",
+    "instock": 10,
+    "price": 19.99,
+    "description": "This plant has been a part of religion for gifting and some are fruit trees. There are more than 300 rose species in the world and some of them can be in the form of shrubs. You may know the popular “red roses” for romantic gestures.",
+    "temprature": "10-45",
+    "humidity": 30,
+    "water": 5,
+    "light": "Roses thrive on direct sunlight. For best results, a minimum of four hours of direct sunlight is recommended.",
+    "height": "3",
+    "benefits": {
+      "airFreshner": true,
+      "otherBenefits": "Rose petals contain polyphenols, antioxidants that work to protect your body from cell damage."
+    },
+    "cautions": {
+      "animalFriendly": true,
+      "poisonous": false,
+      "deathOnConsumption": false
+ 	},
+    "image": "https://www.dropbox.com/s/kvsr21ed0pzc7gf/rose.jpg?raw=1"
+   }

@@ -26,6 +26,7 @@ export function HireGard({
           {gardeners.map((value, index) => {
             return (
               <div key={index} className="profile-card">
+                <div className="top-green-bar"></div>
                 <div className="profile-info">
                   <img src={value.profilePic} className="hire-img" />
                   <div className="col-flex">
@@ -55,7 +56,10 @@ export function HireGard({
                     )}
                   </div>
                 </div>
-                <div className="visit-profile-btn">
+                <div
+                  className="visit-profile-btn"
+                  style={{ marginTop: "10px", height: "auto" }}
+                >
                   <Link to={`/hire-gardener/${value._id}`}>
                     <button className="product-btn">visit profile</button>
                   </Link>

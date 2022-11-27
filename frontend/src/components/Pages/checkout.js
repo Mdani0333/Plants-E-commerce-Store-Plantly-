@@ -16,6 +16,7 @@ export function Checkout({ cartTotal, token, getProducts, giveUser }) {
     status: "Delivering...",
     products: user.cart,
     total: cartTotal,
+    shippingCost: 350,
     address: "",
     zipCode: null,
     phoneNo: null,
@@ -37,7 +38,7 @@ export function Checkout({ cartTotal, token, getProducts, giveUser }) {
   async function handleConfirmation() {
     setLoading(true);
     axios
-      .patch("http://localhost:8080/user/order-placement", data, {
+      .post("http://localhost:8080/user/order-placement", data, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -48,6 +49,10 @@ export function Checkout({ cartTotal, token, getProducts, giveUser }) {
         getProducts();
         setLoading(false);
         navigate("/my/shoppingHistory");
+      })
+      .catch((error) => {
+        console.log(error);
+        setLoading(false);
       });
   }
 
@@ -114,16 +119,28 @@ export function Checkout({ cartTotal, token, getProducts, giveUser }) {
                   );
                 })}
                 <div className="flex-end">
+                  <h5 style={{ marginRight: "10px" }}>Sum:</h5>
+                  <span className="greenSpan">Rs{cartTotal}</span>
+                </div>
+                <div className="flex-end">
+                  <h5 style={{ marginRight: "10px" }}>Shipping Cost:</h5>
+                  <span className="greenSpan">Rs{data.shippingCost}</span>
+                </div>
+                <div className="flex-end">
                   <h3 style={{ marginRight: "10px" }}>Total:</h3>
-                  <h3 className="greenSpan">${cartTotal}</h3>
+                  <h3 className="greenSpan">
+                    Rs{cartTotal + data.shippingCost}
+                  </h3>
                 </div>
               </div>
 
               <form className="form-container" onSubmit={handleSubmit}>
                 <h3>Enter Delivery Information</h3>
                 <br />
-                <div class="form-group">
-                  <label for="address">Address</label>
+                <div class="form-group required">
+                  <label for="address" className="control-label">
+                    Address
+                  </label>
                   <input
                     type="address"
                     class="form-control"
@@ -137,10 +154,12 @@ export function Checkout({ cartTotal, token, getProducts, giveUser }) {
                 </div>
                 <br />
 
-                <div class="form-group">
-                  <label for="zipCode">Zip Code</label>
+                <div class="form-group required">
+                  <label for="zipCode" className="control-label">
+                    Zip Code
+                  </label>
                   <input
-                    type="number"
+                    type="text"
                     class="form-control"
                     id="zipcode"
                     placeholder="Enter 4 digit zip code"
@@ -148,29 +167,34 @@ export function Checkout({ cartTotal, token, getProducts, giveUser }) {
                     onChange={handleChange}
                     required
                     name="zipCode"
-                    maxLength={4}
+                    maxLength="4"
+                    pattern="([0-9]{4})"
                   />
                 </div>
                 <br />
 
-                <div class="form-group">
-                  <label for="phoneNumber">Contact Number</label>
+                <div class="form-group required">
+                  <label for="phoneNumber" className="control-label">
+                    Contact Number
+                  </label>
                   <input
-                    type="number"
+                    type="tel"
                     class="form-control"
                     id="phoneNumber"
-                    placeholder="03**-*******"
+                    placeholder="03*********"
                     value={data.phoneNo}
                     onChange={handleChange}
                     required
                     name="phoneNo"
-                    maxLength={11}
+                    maxLength="11"
+                    pattern="(0)(3)([0-9]{2})([0-9]{7})"
+                    title="03*********"
                   />
                 </div>
                 <br />
 
                 <div class="form-group">
-                  <label for="note">Any Notes</label>
+                  <label for="note">Any Notes (optional)</label>
                   <textarea
                     class="form-control"
                     id="note"

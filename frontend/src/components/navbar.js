@@ -52,12 +52,6 @@ export default function Navbar({ token, adminToken, gardToken, gardener }) {
               <Link to="/shop" className="links">
                 Shop
               </Link>
-              <Link to="/about" className="links">
-                About
-              </Link>
-              <Link to="/contactUs" className="links">
-                Contact
-              </Link>
             </div>
           ) : (
             <div className="display-none"></div>
@@ -70,6 +64,19 @@ export default function Navbar({ token, adminToken, gardToken, gardener }) {
             </div>
           ) : (
             <div className="display-none"></div>
+          )}
+
+          {Object.keys(gardener).length === 0 ? (
+            <>
+              <Link to="/about" className="links">
+                About
+              </Link>
+              <Link to="/contactUs" className="links">
+                Contact
+              </Link>
+            </>
+          ) : (
+            <></>
           )}
         </div>
         <div id="flx">

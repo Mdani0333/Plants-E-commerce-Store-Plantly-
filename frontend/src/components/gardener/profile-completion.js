@@ -28,11 +28,11 @@ export function ProfileCompletion({ gardener, gardToken }) {
     skills: gardener.resume[0].skills || "",
     hobbies: gardener.resume[0].hobbies || "",
   });
-  console.log(data);
 
   //error
   const [error, setError] = useState();
   const [success, setSuccess] = useState();
+  const [loading, setLoading] = useState(false);
 
   //Handlechange
   function handleChange({ currentTarget: input }) {
@@ -51,6 +51,7 @@ export function ProfileCompletion({ gardener, gardToken }) {
   //axois request
   const navigate = useNavigate();
   const handleSubmit = async () => {
+    setLoading(true);
     try {
       const url = "http://localhost:8080/gardener/update";
       const { data: res } = await axios.patch(url, data, {
@@ -59,6 +60,7 @@ export function ProfileCompletion({ gardener, gardToken }) {
         },
       });
       setSuccess(res.message);
+      setLoading(false);
       navigate("/profile");
     } catch (error) {
       if (
@@ -66,6 +68,7 @@ export function ProfileCompletion({ gardener, gardToken }) {
         error.response.status <= 500
       ) {
         setError(error.response.data.message);
+        setLoading(false);
       }
     }
   };
@@ -98,7 +101,7 @@ export function ProfileCompletion({ gardener, gardToken }) {
               <h3>Fill the form below to complete/Update your profile</h3>
               <br />
 
-              <div class="s-input">
+              {/* <div class="s-input">
                 <label class="mr-sm-2" for="inlineFormCustomSelect">
                   Status
                 </label>
@@ -107,13 +110,17 @@ export function ProfileCompletion({ gardener, gardToken }) {
                   id="inlineFormCustomSelect"
                   onChange={handleChange}
                 >
-                  <option value="Un-Employed">Un-Employed</option>
-                  <option value="hired">Hired</option>
+                  <option value="Availabel For Work">Available</option>
+                  <option value="Not Available For Work now">
+                    Not Available
+                  </option>
                 </select>
-              </div>
+              </div> */}
 
-              <div class="form-group">
-                <label for="address">Address</label>
+              <div class="form-group required">
+                <label for="address" className="control-label">
+                  Address
+                </label>
                 <input
                   type="address"
                   class="form-control"
@@ -127,8 +134,10 @@ export function ProfileCompletion({ gardener, gardToken }) {
               </div>
               <br />
 
-              <div class="form-group">
-                <label for="summary">Summary</label>
+              <div class="form-group required">
+                <label for="summary" className="control-label">
+                  Summary
+                </label>
                 <textarea
                   class="form-control"
                   id="summary"
@@ -144,8 +153,10 @@ export function ProfileCompletion({ gardener, gardToken }) {
               <br />
               <br />
 
-              <div class="form-group">
-                <label for="education">Education</label>
+              <div class="form-group required">
+                <label for="education" className="control-label">
+                  Education
+                </label>
                 <textarea
                   class="form-control"
                   id="education"
@@ -161,8 +172,10 @@ export function ProfileCompletion({ gardener, gardToken }) {
               <br />
               <br />
 
-              <div class="form-group">
-                <label for="skills">Skills</label>
+              <div class="form-group required">
+                <label for="skills" className="control-label">
+                  Skills
+                </label>
                 <textarea
                   class="form-control"
                   id="skills"
@@ -178,8 +191,10 @@ export function ProfileCompletion({ gardener, gardToken }) {
               <br />
               <br />
 
-              <div class="form-group">
-                <label for="hobbies">Hobbies</label>
+              <div class="form-group required">
+                <label for="hobbies" className="control-label">
+                  Hobbies
+                </label>
                 <textarea
                   class="form-control"
                   id="hobbies"
@@ -259,7 +274,9 @@ export function ProfileCompletion({ gardener, gardToken }) {
                 <form onSubmit={add}>
                   <label>Add Experience</label>
                   <br />
-                  <label for="title">Job Title</label>
+                  <label for="title" className="control-label">
+                    Job Title
+                  </label>
                   <input
                     type="text"
                     class="form-control"
@@ -271,7 +288,9 @@ export function ProfileCompletion({ gardener, gardToken }) {
                     name="title"
                   />
                   <br />
-                  <label for="company">Place Name</label>
+                  <label for="company" className="control-label">
+                    Place Name
+                  </label>
                   <input
                     type="text"
                     class="form-control"
@@ -283,7 +302,9 @@ export function ProfileCompletion({ gardener, gardToken }) {
                     name="company"
                   />
                   <br />
-                  <label for="from">From date</label>
+                  <label for="from" className="control-label">
+                    From date
+                  </label>
                   <br />
                   <DatePicker
                     id="from"
@@ -291,12 +312,16 @@ export function ProfileCompletion({ gardener, gardToken }) {
                     value={fromDate}
                   />
                   <br />
-                  <label for="to">To date</label>
+                  <label for="to" className="control-label">
+                    To date
+                  </label>
                   <br />
                   <DatePicker id="to" onChange={onToDate} value={toDate} />
                   <br />
                   <br />
-                  <label for="des">Description</label>
+                  <label for="des" className="control-label">
+                    Description
+                  </label>
                   <textarea
                     class="form-control"
                     id="des"
@@ -317,9 +342,21 @@ export function ProfileCompletion({ gardener, gardToken }) {
 
               <br />
 
-              <button class="btn btn-success" onClick={() => handleSubmit()}>
-                Submit profile
-              </button>
+              {!loading && (
+                <button class="btn btn-success" onClick={() => handleSubmit()}>
+                  Submit profile
+                </button>
+              )}
+
+              {loading && (
+                <button class="btn btn-success" type="button" disabled>
+                  <span
+                    class="spinner-border spinner-border-sm"
+                    role="status"
+                    aria-hidden="true"
+                  ></span>
+                </button>
+              )}
               <br />
               {success && <span className="greenSpan">{success}</span>}
               <br />
