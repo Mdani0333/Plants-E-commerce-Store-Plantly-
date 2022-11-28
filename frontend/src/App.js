@@ -40,6 +40,7 @@ import { useCookies } from "react-cookie";
 import { Checkout } from "./components/Pages/checkout";
 import { ShoppingHistory } from "./components/user/shoppingHistory";
 import { ManageOrders } from "./components/admin/manage-orders";
+import { Categories } from "./components/Pages/categories";
 
 function App() {
   //cookie
@@ -328,6 +329,13 @@ function App() {
                         addToCart={addToCart}
                         addToFav={addToFav}
                       />
+                    }
+                  />
+                  <Route
+                    exact
+                    path="categories/:category"
+                    element={
+                      <Categories addToCart={addToCart} addToFav={addToFav} />
                     }
                   />
                   <Route

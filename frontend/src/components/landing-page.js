@@ -60,54 +60,64 @@ export function LandingPage() {
       <div className="types-div">
         <h2 className="plant-types">Different types of Plants:</h2>
         <div className="types-row">
-          <div className="types-box">
-            <h3 className="types-h">Indoor Plants</h3>
-            <img
-              src={
-                "https://www.dropbox.com/s/8e13hu01y9qir2m/feey-ZQbpzgoWYrA-unsplash-removebg-preview.png?raw=1"
-              }
-              className="types-images"
-            />
-          </div>
-          <div className="types-box">
-            <h3 className="types-h">Mini Plants</h3>
-            <img
-              src={
-                "https://www.dropbox.com/s/2wqm9mca9y80l6u/angga-indratama-RGP7KmgvGRI-unsplash-removebg-preview.png?raw=1"
-              }
-              className="types-images"
-            />
-          </div>
-          <div className="types-box">
-            <h3 className="types-h">Flowers</h3>
-            <img
-              src={
-                "https://www.dropbox.com/s/ber63dc7o0bsfx2/1653590696-the-sill-pink-anthurium-1653590676-removebg-preview.png?raw=1"
-              }
-              className="types-images"
-            />
-          </div>
+          <Link to="categories/indoorPlant">
+            <div className="types-box">
+              <h3 className="types-h">Indoor Plants</h3>
+              <img
+                src={
+                  "https://www.dropbox.com/s/8e13hu01y9qir2m/feey-ZQbpzgoWYrA-unsplash-removebg-preview.png?raw=1"
+                }
+                className="types-images"
+              />
+            </div>
+          </Link>
+          <Link to="categories/mini">
+            <div className="types-box">
+              <h3 className="types-h">Mini Plants</h3>
+              <img
+                src={
+                  "https://www.dropbox.com/s/2wqm9mca9y80l6u/angga-indratama-RGP7KmgvGRI-unsplash-removebg-preview.png?raw=1"
+                }
+                className="types-images"
+              />
+            </div>
+          </Link>
+          <Link to="categories/flower">
+            <div className="types-box">
+              <h3 className="types-h">Flowers</h3>
+              <img
+                src={
+                  "https://www.dropbox.com/s/ber63dc7o0bsfx2/1653590696-the-sill-pink-anthurium-1653590676-removebg-preview.png?raw=1"
+                }
+                className="types-images"
+              />
+            </div>
+          </Link>
         </div>
 
         <div className="types-row">
-          <div className="types-box">
-            <h3 className="types-h">Pot standee</h3>
-            <img
-              src={
-                "https://www.dropbox.com/s/wbxx663wfvqplax/feey-Ug5roZHlC78-unsplash-removebg-preview.png?raw=1"
-              }
-              className="types-images"
-            />
-          </div>
-          <div className="types-box">
-            <h3 className="types-h">Agricultural</h3>
-            <img
-              src={
-                "https://www.dropbox.com/s/aclgzvf3zvadk0i/sanni-sahil-LEaK1Lmd1a8-unsplash-removebg-preview.png?raw=1"
-              }
-              className="types-images"
-            />
-          </div>
+          <Link to="categories/pot-standee">
+            <div className="types-box">
+              <h3 className="types-h">Pot standee</h3>
+              <img
+                src={
+                  "https://www.dropbox.com/s/wbxx663wfvqplax/feey-Ug5roZHlC78-unsplash-removebg-preview.png?raw=1"
+                }
+                className="types-images"
+              />
+            </div>
+          </Link>
+          <Link to="categories/agricultural">
+            <div className="types-box">
+              <h3 className="types-h">Agricultural</h3>
+              <img
+                src={
+                  "https://www.dropbox.com/s/aclgzvf3zvadk0i/sanni-sahil-LEaK1Lmd1a8-unsplash-removebg-preview.png?raw=1"
+                }
+                className="types-images"
+              />
+            </div>
+          </Link>
         </div>
       </div>
 

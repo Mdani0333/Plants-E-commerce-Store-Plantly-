@@ -5,7 +5,6 @@ import { BiShoppingBag } from "react-icons/bi";
 import { ProductsContext } from "../../context-hooks/ProductsContext";
 import { Link } from "react-router-dom";
 import { UserContext } from "../../context-hooks/UserContext";
-import axios from "axios";
 
 export function Product({ categories, addToCart, addToFav }) {
   const products = useContext(ProductsContext);
